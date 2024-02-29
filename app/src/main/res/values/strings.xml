@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">CookShare</string>
+    <string name="restriction_full_name">* Full name must be between 6 and 20 characters.</string>
+    <string name="restriction_date_of_birth">* Date of birth cannot be empty and must be in the past.</string>
+    <string name="restriction_email">* Email must not be null and contains @.</string>
+    <string name="restriction_password">* Password must be between 6 and 10 characters, and contain at least one uppercase letter, one lowercase letter, and one number.</string>
+    <string name="restriction_confirm_password">* Passwords do not match.</string>
+    <string-array name="units_array">
+        <item>piece</item>
+        <item>gram</item>
+        <item>glass</item>
+        <item>kilogram</item>
+    </string-array>
+</resources>

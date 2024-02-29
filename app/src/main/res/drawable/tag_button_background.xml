@@ -1,0 +1,8 @@
+<!-- tag_button_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Normal state -->
+    <item android:drawable="@drawable/normal_background" />
+
+    <!-- Clicked state -->
+    <item android:drawable="@drawable/clicked_background" android:state_pressed="true" />
+</selector>

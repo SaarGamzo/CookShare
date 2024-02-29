@@ -1,0 +1,6 @@
+<!-- normal_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/lightRed" /> <!-- Normal background color -->
+    <corners android:radius="20dp" /> <!-- Rounded corners -->
+</shape>

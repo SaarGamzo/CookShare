@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/uploadRecipe"
+        android:title="Upload new recipe!" />
+    <item
+        android:id="@+id/updateRecipes"
+        android:title="Update recipes" />
+    <item
+        android:id="@+id/myRecipes"
+        android:title="My recipes" />
+    <item
+        android:id="@+id/likedRecipes"
+        android:title="Likes recipes" />
+</menu>
