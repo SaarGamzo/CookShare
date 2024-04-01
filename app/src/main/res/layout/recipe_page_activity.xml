@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Upper Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightBlue">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/lightgrey"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@android:color/black">
+
+            <!-- Acronyms of Full Name in a Circle (Left) -->
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content">
+
+                <TextView
+                    android:id="@+id/textAcronyms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/circle_outline"
+                    android:padding="8dp"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Menu Icon (Right) -->
+            <ImageView
+                android:id="@+id/menuIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:padding="8dp"
+                android:src="@drawable/menu" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/appBarLayout"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- UpdateRecipe -->
+            <TextView
+                android:id="@+id/updateRecipeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="UpdateRecipe"
+                android:textColor="@android:color/holo_blue_bright"
+                android:textSize="26sp"
+                android:visibility="invisible"
+                android:textStyle="bold" />
+
+            <!-- Recipe Name -->
+            <TextView
+                android:id="@+id/recipeHeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:layout_below="@+id/updateRecipeText"
+                android:text="Recipe Name"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <!-- recipe image -->
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="350dp"
+                android:layout_height="250dp"
+                android:layout_below="@id/recipeHeadline"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/carrot" />
+
+            <!-- Tags -->
+            <TextView
+                android:id="@+id/tagsHeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recipeImage"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Tags:"
+                android:textColor="@android:color/black"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tagsHeadline"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="the tags"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Ingredients -->
+            <TextView
+                android:id="@+id/ingredientsHeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tags"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Ingredients:"
+                android:textColor="@android:color/black"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ingredientsHeadline"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="the ingrediens"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Steps -->
+            <TextView
+                android:id="@+id/stepssHeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ingredients"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Steps:"
+                android:textColor="@android:color/black"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/steps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stepssHeadline"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="the steps"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Cooking time -->
+            <TextView
+                android:id="@+id/cookingTimeHeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/steps"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Cooking time:"
+                android:textColor="@android:color/black"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cookingTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cookingTimeHeadline"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="the cooking time"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/cookingTimeImg"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/cookingTime"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/clock" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

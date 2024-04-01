@@ -93,4 +93,18 @@ public class Recipe {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "recipeName='" + recipeName + '\'' +
+                ", tags=" + tags +
+                ", ingredients=" + ingredients +
+                ", steps=" + steps +
+                ", cookingTimeMinutes=" + cookingTimeMinutes +
+                ", createdTimestamp=" + createdTimestamp +
+                ", createdBy='" + createdBy + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

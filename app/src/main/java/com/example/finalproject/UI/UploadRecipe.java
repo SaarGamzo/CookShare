@@ -1,10 +1,9 @@
 package com.example.finalproject.UI;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,12 +20,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.finalproject.Models.Ingredient;
 import com.example.finalproject.Models.Recipe;
@@ -51,7 +51,7 @@ public class UploadRecipe extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
-    private ImageView logoImageView;
+    private ImageView menuIcon;
     private TextView headlineTextView;
     private EditText recipeNameEditText;
     private ChipGroup tagsChipGroup;
@@ -87,11 +87,20 @@ public class UploadRecipe extends AppCompatActivity {
     // Declare a list to store the IDs of ingredient EditTexts
     private List<Integer> ingredientEditTextIds = new ArrayList<>();
 
+    private String userEmail;
+
+    private TextView textAcronyms;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_recipe_activity);
         findViews();
+        if (getIntent().hasExtra("email")) {
+            userEmail = getIntent().getStringExtra("email");
+            textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
+        }
         myUtils = MyUtils.getInstance(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
@@ -115,6 +124,76 @@ public class UploadRecipe extends AppCompatActivity {
                 // Do nothing
             }
         });
+        // Set OnClickListener for menuIcon
+        menuIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMenuOptions();
+            }
+        });
+
+        // Set OnClickListener for Acronyms TextView
+        textAcronyms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLogoutDialog();
+            }
+        });
+    }
+
+    private void showLogoutDialog() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logoutUser();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void logoutUser() {
+        // Perform logout action
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(UploadRecipe.this, LoginActivity.class));
+        finish(); // Close this activity
+    }
+
+    private void showMenuOptions() {
+        PopupMenu popupMenu = new PopupMenu(this, menuIcon);
+        popupMenu.getMenuInflater().inflate(R.menu.update_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.mainFeed) {
+                    // Handle upload recipe action
+                    Intent mainIntent = new Intent(UploadRecipe.this, MainFeed.class);
+                    mainIntent.putExtra("email", userEmail);
+                    mainIntent.putExtra("textAcronyms", textAcronyms.getText());
+                    startActivity(mainIntent);
+                    finish();
+                    return true;
+                } else if (id == R.id.personalDetails) {
+                    Intent uploadRecipeIntent = new Intent(UploadRecipe.this, PersonalDetails.class);
+                    uploadRecipeIntent.putExtra("email", userEmail);
+                    uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                    startActivity(uploadRecipeIntent);
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 
     @Override
@@ -175,7 +254,7 @@ public class UploadRecipe extends AppCompatActivity {
 
         // Get the bitmap from the selected image view
         Bitmap bitmap = getImage();
-                if (bitmap == null) {
+        if (bitmap == null) {
             myUtils.showToast("Please select an image for the recipe.");
             return;
         }
@@ -213,6 +292,12 @@ public class UploadRecipe extends AppCompatActivity {
 
                             // Logging: Indicate when the recipe is added successfully
                             Log.d("UploadRecipe", "Recipe added to database");
+                            finish();
+                            // Navigate to MainFeed activity
+                            Intent mainFeedIntent = new Intent(UploadRecipe.this, MainFeed.class);
+                            mainFeedIntent.putExtra("email", userEmail); // Assuming userEmail is the variable holding the email
+                            mainFeedIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(mainFeedIntent);
                         })
                         .addOnFailureListener(e -> {
                             // Error adding recipe to database
@@ -230,7 +315,6 @@ public class UploadRecipe extends AppCompatActivity {
             Log.e("UploadRecipe", "Failed to upload image", e);
         });
     }
-
 
 
     private List<String> getSelectedTags() {
@@ -274,7 +358,6 @@ public class UploadRecipe extends AppCompatActivity {
     }
 
 
-
     private List<String> getSteps() {
         List<String> steps = new ArrayList<>();
 
@@ -311,7 +394,6 @@ public class UploadRecipe extends AppCompatActivity {
             return "default_user_id";
         }
     }
-
 
 
     private boolean isRecipeNameValid() {
@@ -459,7 +541,6 @@ public class UploadRecipe extends AppCompatActivity {
 
 
     private void findViews() {
-        logoImageView = findViewById(R.id.logoImageView);
         headlineTextView = findViewById(R.id.headlineTextView);
         recipeNameEditText = findViewById(R.id.recipeNameEditText);
         tagsChipGroup = findViewById(R.id.tagsChipGroup);
@@ -472,7 +553,8 @@ public class UploadRecipe extends AppCompatActivity {
         selectedImageView = findViewById(R.id.selectedImageView);
         cookingTimeSeekBar = findViewById(R.id.cookingTimeSeekBar);
         selectedCookingTimeText = findViewById(R.id.selectedCookingTimeText);
-
+        menuIcon = findViewById(R.id.menuIcon);
+        textAcronyms = findViewById(R.id.textAcronyms);
     }
 
 

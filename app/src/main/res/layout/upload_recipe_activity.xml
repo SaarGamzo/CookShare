@@ -1,23 +1,60 @@
+
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:background="@color/white">
 
-        <!-- Small logo on the top left corner -->
-        <ImageView
-            android:id="@+id/logoImageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/logo"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="2dp"/>
+        <!-- Upper Toolbar -->
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/appBarLayout"
+            android:background="@color/lightBlue">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/lightgrey">
+
+                <!-- Acronyms of Full Name in a Circle (Left) -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/textAcronyms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:background="@drawable/circle_outline"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp" />
+                </LinearLayout>
+
+                <!-- Menu Icon (Right) -->
+                <ImageView
+                    android:id="@+id/menuIcon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/menu"
+                    android:padding="8dp"
+                    android:layout_gravity="end" />
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+
 
         <!-- Headline "Upload a recipe!" at the center -->
         <TextView

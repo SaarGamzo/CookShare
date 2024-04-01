@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mainFeed"
+        android:title="Main feed" />
+    <item
+        android:id="@+id/uploadARecipe"
+        android:title="Upload A Recipe" />
+</menu>

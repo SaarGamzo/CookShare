@@ -35,24 +35,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainFeed extends AppCompatActivity {
+public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeClickListener {
 
     private ImageView menuIcon;
     private TextView textAcronyms;
 
     private String userEmail;
     private DatabaseReference usersRef;
+    private DatabaseReference likedRecipesRef;
     private FirebaseAuth mAuth;
 
     private RecyclerView recyclerViewRecipes;
     private RecipeAdapter recipeAdapter;
-    private List<Recipe> recipeList;
-
-    private List<Recipe> originalRecipeList;
+    private Map<String, Recipe> recipeMap; // Use map to hold all recipes
 
     private EditText searchField;
     private Button searchButton;
@@ -69,7 +69,7 @@ public class MainFeed extends AppCompatActivity {
         setContentView(R.layout.main_feed_activity);
         getViews();
         // Initialize RecyclerView and recipeList
-        recipeList = new ArrayList<>();
+        recipeMap = new HashMap<>();
         likedRecipeNames = new HashMap<>();
 
         mAuth = FirebaseAuth.getInstance();
@@ -81,24 +81,22 @@ public class MainFeed extends AppCompatActivity {
         if (extras != null && extras.containsKey("email")) {
             userEmail = extras.getString("email");
             // Fetch user information from Firebase Database
+            userEmail = userEmail.replace("!", ".");
             fetchUserInformation(userEmail);
             userEmail = userEmail.replace(".", "!");
             fetchUserLikedRecipes(userEmail);
         }
 
         // Initialize Firebase database reference for liked recipes
-        DatabaseReference likedRecipesRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userEmail.replace(".", "!")).child("liked_recipes");
-        recipeAdapter = new RecipeAdapter(recipeList, likedRecipeNames, likedRecipesRef);
+        likedRecipesRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userEmail.replace(".", "!")).child("liked_recipes");
+        fetchAllRecipes();
+        recipeAdapter = new RecipeAdapter(recipeMap, likedRecipeNames, likedRecipesRef);
+        recipeAdapter.setRecipeClickListener(this);
 
         // Set layout manager and adapter for RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewRecipes.setLayoutManager(layoutManager);
         recyclerViewRecipes.setAdapter(recipeAdapter);
-
-        // Call fetchRecipes() method to fetch recipes from Firebase
-        fetchRecipes();
-        // Call initializeOriginalRecipeList after fetching recipes
-        initializeOriginalRecipeList();
 
         // Set OnClickListener for menuIcon
         menuIcon.setOnClickListener(new View.OnClickListener() {
@@ -131,12 +129,33 @@ public class MainFeed extends AppCompatActivity {
         });
     }
 
+    private void fetchAllRecipes() {
+        DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("Recipes");
+        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+                    String recipeName = recipeSnapshot.getKey();
+                    Recipe recipe = recipeSnapshot.getValue(Recipe.class);
+                    if (recipe != null) {
+                        recipeMap.put(recipeName, recipe);
+                    }
+                }
+                // Set the adapter after fetching recipes
+                recipeAdapter = new RecipeAdapter(recipeMap, likedRecipeNames, likedRecipesRef);
+                recyclerViewRecipes.setAdapter(recipeAdapter);
+            }
 
-    private void initializeOriginalRecipeList() {
-        originalRecipeList = new ArrayList<>(recipeList);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle database error
+                Log.e("RecipeFetch", "Error fetching recipes: " + error.getMessage());
+            }
+        });
     }
 
-    public void getViews(){
+
+    public void getViews() {
         textAcronyms = findViewById(R.id.textAcronyms);
         menuIcon = findViewById(R.id.menuIcon);
         recyclerViewRecipes = findViewById(R.id.recyclerViewRecipes);
@@ -147,25 +166,26 @@ public class MainFeed extends AppCompatActivity {
         setTags();
     }
 
-    private void fetchUserLikedRecipes(String userEmail) {
-        // Assuming you have a database reference for liked recipes
-        DatabaseReference likedRecipesRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userEmail).child("liked_recipes");
-        likedRecipesRef.addValueEventListener(new ValueEventListener() {
+    private void fetchUserLikedRecipes(String email) {
+        usersRef.child(email.replace(".", "!")).child("liked_recipes").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                likedRecipeNames.clear();
-                for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    String recipeName = recipeSnapshot.getKey(); // Assuming the key is the recipe name
-                    Boolean isLiked = recipeSnapshot.getValue(Boolean.class); // Get liked status
-                    likedRecipeNames.put(recipeName, isLiked);
+                if (snapshot.exists()) {
+                    for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
+                        String recipeName = recipeSnapshot.getKey();
+                        Boolean isLiked = recipeSnapshot.getValue(Boolean.class);
+                        if (isLiked != null && isLiked) {
+                            likedRecipeNames.put(recipeName, true);
+                        }
+                    }
                 }
-                // Notify the adapter of data change to update UI
-                recipeAdapter.notifyDataSetChanged();
+                recipeAdapter.notifyDataSetChanged(); // Notify adapter of data change to update UI
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Handle database error
+                Log.e("UserFetch", "Error fetching user liked recipes: " + error.getMessage());
             }
         });
     }
@@ -209,44 +229,24 @@ public class MainFeed extends AppCompatActivity {
     }
 
 
-
-
-
     private void filterRecipesByTag(String tag) {
-
-        // Clear the current list
-        recipeList.clear();
-
-        // Fetch all recipes again from Firebase and apply tag filter
-        DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("Recipes");
-        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    Recipe recipe = recipeSnapshot.getValue(Recipe.class);
-                    if (recipe != null && recipe.getTags() != null && recipe.getTags().contains(tag)) {
-                        recipeList.add(recipe);
-                    }
-                }
-                // Notify the adapter of the data change
-                recipeAdapter.notifyDataSetChanged();
+        Map<String, Recipe> filteredMap = new HashMap<>();
+        for (Map.Entry<String, Recipe> entry : recipeMap.entrySet()) {
+            Recipe recipe = entry.getValue();
+            if (recipe.getTags().contains(tag)) {
+                filteredMap.put(entry.getKey(), recipe);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle database error
-            }
-        });
+        }
+        recipeAdapter = new RecipeAdapter(filteredMap, likedRecipeNames, likedRecipesRef);
+        recyclerViewRecipes.setAdapter(recipeAdapter);
     }
 
 
-
-
-
     private void clearSearch() {
-        searchField.setText(""); // Clear the search field
-        performSearch();
         clearTags();
+        searchField.setText("");
+        recipeAdapter = new RecipeAdapter(recipeMap, likedRecipeNames, likedRecipesRef);
+        recyclerViewRecipes.setAdapter(recipeAdapter);
     }
 
     private void showLogoutDialog() {
@@ -275,27 +275,6 @@ public class MainFeed extends AppCompatActivity {
         finish(); // Close this activity
     }
 
-    private void fetchRecipes() {
-        DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("Recipes");
-        recipesRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                recipeList.clear();
-                for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    Recipe recipe = recipeSnapshot.getValue(Recipe.class);
-                    if (recipe != null) {
-                        recipeList.add(recipe);
-                    }
-                }
-                recipeAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle database error
-            }
-        });
-    }
 
     private void fetchUserInformation(String email) {
         usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -346,19 +325,78 @@ public class MainFeed extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.uploadRecipe) {
-//            startActivity(new Intent(MainActivity.this, UploadRecipeActivity.class));
-            return true;
-        } else if (id == R.id.updateRecipes) {
-//            startActivity(new Intent(MainActivity.this, UpdateRecipesActivity.class));
+            // Handle upload recipe action
+            Intent uploadRecipeIntent = new Intent(MainFeed.this, UploadRecipe.class);
+            uploadRecipeIntent.putExtra("email", userEmail);
+            uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+            startActivity(uploadRecipeIntent);
+            finish();
             return true;
         } else if (id == R.id.myRecipes) {
-//            startActivity(new Intent(MainActivity.this, MyRecipesActivity.class));
+            // Show recipes created by the user
+            showMyRecipes();
             return true;
         } else if (id == R.id.likedRecipes) {
-//            startActivity(new Intent(MainActivity.this, LikedRecipesActivity.class));
+            // Show recipes liked by the user
+            showLikedRecipes();
+            return true;
+        }
+        else if (id == R.id.personalDetails) {
+            Intent uploadRecipeIntent = new Intent(MainFeed.this, PersonalDetails.class);
+            uploadRecipeIntent.putExtra("email", userEmail);
+            uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+            startActivity(uploadRecipeIntent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showMyRecipes() {
+        clearSearch();
+        String currentUserId = getCurrentUserId();
+        Map<String, Recipe> myRecipes = new HashMap<>();
+        for (Map.Entry<String, Recipe> entry : recipeMap.entrySet()) {
+            Recipe recipe = entry.getValue();
+            // Check if the recipe is created by the current user
+            if (recipe.getCreatedBy().equals(currentUserId)) {
+                myRecipes.put(entry.getKey(), recipe);
+            }
+        }
+        // Update the adapter with myRecipes
+        recipeAdapter = new RecipeAdapter(myRecipes, likedRecipeNames, likedRecipesRef);
+        recyclerViewRecipes.setAdapter(recipeAdapter);
+    }
+
+    private String getCurrentUserId() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            return currentUser.getUid();
+        } else {
+            // Return a default user ID or handle the situation as needed
+            return "default_user_id";
+        }
+    }
+
+
+
+    private void showLikedRecipes() {
+        clearSearch();
+        Map<String, Recipe> likedRecipes = new HashMap<>();
+        for (Map.Entry<String, Boolean> entry : likedRecipeNames.entrySet()) {
+            String recipeName = entry.getKey();
+            Boolean isLiked = entry.getValue();
+            if (isLiked) {
+                // Check if the liked recipe exists in the recipeMap
+                Recipe likedRecipe = recipeMap.get(recipeName);
+                if (likedRecipe != null) {
+                    likedRecipes.put(recipeName, likedRecipe);
+                }
+            }
+        }
+        // Update the adapter with likedRecipes
+        recipeAdapter = new RecipeAdapter(likedRecipes, likedRecipeNames, likedRecipesRef);
+        recyclerViewRecipes.setAdapter(recipeAdapter);
     }
 
     private void showMenuOptions() {
@@ -369,16 +407,25 @@ public class MainFeed extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.uploadRecipe) {
-                    startActivity(new Intent(MainFeed.this, UploadRecipe.class));
-                    return true;
-                } else if (id == R.id.updateRecipes) {
-//                    startActivity(new Intent(MainFeed.this, UpdateRecipesActivity.class));
+                    // Handle upload recipe action
+                    Intent uploadRecipeIntent = new Intent(MainFeed.this, UploadRecipe.class);
+                    uploadRecipeIntent.putExtra("email", userEmail);
+                    uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                    startActivity(uploadRecipeIntent);
+                    finish();
                     return true;
                 } else if (id == R.id.myRecipes) {
-//                    startActivity(new Intent(MainFeed.this, MyRecipesActivity.class));
+                    showMyRecipes();
                     return true;
                 } else if (id == R.id.likedRecipes) {
-//                    startActivity(new Intent(MainFeed.this, LikedRecipesActivity.class));
+                    showLikedRecipes();
+                    return true;
+                } else if (id == R.id.personalDetails) {
+                    Intent uploadRecipeIntent = new Intent(MainFeed.this, PersonalDetails.class);
+                    uploadRecipeIntent.putExtra("email", userEmail);
+                    uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                    startActivity(uploadRecipeIntent);
+                    finish();
                     return true;
                 }
                 return false;
@@ -388,30 +435,24 @@ public class MainFeed extends AppCompatActivity {
     }
 
     private void performSearch() {
+        clearTags();
         String query = searchField.getText().toString().trim().toLowerCase();
-
-        // Clear the current list
-        recipeList.clear();
-
-        // Fetch all recipes again from Firebase and apply search filter
-        DatabaseReference recipesRef = FirebaseDatabase.getInstance().getReference().child("Recipes");
-        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot recipeSnapshot : snapshot.getChildren()) {
-                    Recipe recipe = recipeSnapshot.getValue(Recipe.class);
-                    if (recipe != null && recipe.getRecipeName().toLowerCase().contains(query)) {
-                        recipeList.add(recipe);
-                    }
-                }
-                // Notify the adapter of the data change
-                recipeAdapter.notifyDataSetChanged();
+        Map<String, Recipe> searchedMap = new HashMap<>();
+        for (Map.Entry<String, Recipe> entry : recipeMap.entrySet()) {
+            Recipe recipe = entry.getValue();
+            if (recipe.getRecipeName().toLowerCase().contains(query)) {
+                searchedMap.put(entry.getKey(), recipe);
             }
+        }
+        recipeAdapter = new RecipeAdapter(searchedMap, likedRecipeNames, likedRecipesRef);
+        recyclerViewRecipes.setAdapter(recipeAdapter);
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle database error
-            }
-        });
+    @Override
+    public void onRecipeClicked(Recipe recipe) {
+        // Handle the recipe click here
+        Intent intent = new Intent(MainFeed.this, RecipePageActivity.class);
+        intent.putExtra("recipeName", recipe.getRecipeName());
+        startActivity(intent);
     }
 }
