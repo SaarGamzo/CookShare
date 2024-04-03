@@ -5,7 +5,7 @@
 
     <!-- Add camera permission -->
     <uses-feature android:name="android.hardware.camera"></uses-feature>
-    <uses-permission android:name="android.permission.CAMERA" />
+
 
     <!-- Add storage read permission -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
