@@ -232,14 +232,35 @@ public class UploadRecipe extends AppCompatActivity {
 
     private void onSubmitClicked() {
         // Check if all required inputs are provided
+        List<Ingredient> ingredients = getIngredients();
+        List<String> steps = getSteps();
         if (!isRecipeNameValid() || !areTagsSelected() || !areIngredientsAdded()
-                || !areStepsAdded() || !isImageUploaded() || !isCookingTimeSelected()) {
+                || !areStepsAdded() || !isImageUploaded() || !isCookingTimeSelected() || !validateStepsNotEmpty(steps)
+                || validateIngredientsNotEmpty(ingredients)) {
             // Show a toast indicating missing inputs
             myUtils.showToast("Please fill in all required fields.");
         } else {
             // All inputs are provided, add the recipe to the Firebase database
             addRecipeToDatabase();
         }
+    }
+
+    private boolean validateStepsNotEmpty(List<String> steps) {
+        for (String step : steps) {
+            if (step.trim().isEmpty()) {
+                return false; // At least one step is empty
+            }
+        }
+        return true; // All steps are not empty
+    }
+
+    private boolean validateIngredientsNotEmpty(List<Ingredient> ingredients) {
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient.getName().trim().isEmpty() || ingredient.getQuantity() <= 0) {
+                return false; // At least one ingredient is empty or has invalid data
+            }
+        }
+        return true; // All ingredients are not empty and have valid data
     }
 
     private void addRecipeToDatabase() {
@@ -560,6 +581,23 @@ public class UploadRecipe extends AppCompatActivity {
         stepEditTextIds.add(stepsIDCounter);
         stepsIDCounter++;
 
+        // Button to remove the step field
+        Button removeButton = new Button(this);
+        removeButton.setText("Remove");
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove the views associated with this step field
+                stepsLayout.removeView(label);
+                stepsLayout.removeView(stepEditText);
+                stepsLayout.removeView(removeButton);
+                // Remove the ID from the list
+                stepEditTextIds.remove(Integer.valueOf(stepEditText.getId()));
+                // Update the step counter
+                stepCounter--;
+            }
+        });
+        stepsLayout.addView(removeButton);
     }
 
 
