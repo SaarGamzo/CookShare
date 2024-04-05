@@ -62,27 +62,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- UpdateRecipe -->
-            <TextView
-                android:id="@+id/updateRecipeText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="UpdateRecipe"
-                android:textColor="@android:color/holo_blue_bright"
-                android:textSize="26sp"
+            <ImageView
+                android:id="@+id/updateRecipeIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:visibility="invisible"
-                android:textStyle="bold" />
-
-            <!-- Recipe Name -->
+                android:layout_marginStart="8dp"
+                android:src="@drawable/edit"
+                />
             <TextView
                 android:id="@+id/recipeHeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:layout_below="@+id/updateRecipeText"
                 android:text="Recipe Name"
                 android:textColor="@android:color/black"
                 android:textSize="30sp"

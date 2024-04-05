@@ -25,8 +25,10 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.finalproject.Models.Ingredient;
 import com.example.finalproject.Models.Recipe;
 import com.example.finalproject.R;
@@ -35,8 +37,11 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -44,15 +49,20 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class UploadRecipe extends AppCompatActivity {
+public class UpdateRecipeActivity extends AppCompatActivity {
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
     private ImageView menuIcon;
-    private TextView headlineTextView;
+
+    private String existingImageUrl;
+
+    private TextView textAcronyms;
+    private TextView recipeNameTextView;
     private EditText recipeNameEditText;
     private ChipGroup tagsChipGroup;
     private LinearLayout ingredientsLayout;
@@ -60,7 +70,7 @@ public class UploadRecipe extends AppCompatActivity {
     private LinearLayout stepsLayout;
     private Button addStepButton;
     private Button uploadImageButton;
-    private Button uploadRecipeButton;
+    private Button updateRecipe;
     private ImageView selectedImageView;
 
     private int ingredientCounter = 1;
@@ -89,24 +99,26 @@ public class UploadRecipe extends AppCompatActivity {
 
     private String userEmail;
 
-    private TextView textAcronyms;
+
+    private String recipeName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.upload_recipe_activity);
+        setContentView(R.layout.update_recipe_activity);
         findViews();
-        if (getIntent().hasExtra("email")) {
-            userEmail = getIntent().getStringExtra("email");
-            textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
-        }
+
+        recipeName = getIntent().getStringExtra("recipeName");
+        textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
         myUtils = MyUtils.getInstance(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-        selectedImageView.setVisibility(View.GONE);
+        selectedImageView.setVisibility(View.VISIBLE);
         setListeners();
         populateTags();
+
+
         cookingTimeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -123,7 +135,9 @@ public class UploadRecipe extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // Do nothing
             }
+
         });
+
         // Set OnClickListener for menuIcon
         menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +151,60 @@ public class UploadRecipe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showLogoutDialog();
+            }
+        });
+
+        fetchRecipeDetails(recipeName);
+    }
+
+    private void fetchRecipeDetails(String recipeName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Fetch data from dataSnapshot and assign it to variables
+                    ArrayList<String> recipeTags = (ArrayList<String>) dataSnapshot.child("tags").getValue();
+                    ArrayList<String> recipeSteps = (ArrayList<String>) dataSnapshot.child("steps").getValue();
+                    int recipeCookingTime = dataSnapshot.child("cookingTimeMinutes").getValue(Integer.class);
+                    String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                    existingImageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                    ArrayList<HashMap<String, Object>> ingredientsList = (ArrayList<HashMap<String, Object>>) dataSnapshot.child("ingredients").getValue();
+
+
+                    // update values:
+                    cookingTimeSeekBar.setProgress(recipeCookingTime);
+                    recipeNameTextView.setText(recipeName);
+                    for (String tag : recipeTags) {
+                        for (int chipId : chipsIds) {
+                            Chip chip = findViewById(chipId);
+                            if (chip.getText().toString().equals(tag)) {
+                                chip.setChecked(true);
+                            }
+                        }
+                    }
+
+                    for (HashMap<String, Object> ingredientMap : ingredientsList) {
+                        String name = (String) ingredientMap.get("name");
+                        int quantity = ((Long) ingredientMap.get("quantity")).intValue();
+                        String unit = (String) ingredientMap.get("unit");
+                        addIngredientField(name, String.valueOf(quantity), unit);
+                    }
+                    for (String step : recipeSteps) {
+                        addStepField(step);
+                    }
+                    // Load the recipe image using the provided URL
+                    Glide.with(UpdateRecipeActivity.this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.carrot)  // Placeholder image while loading
+                            .error(R.drawable.carrot)  // Error image if unable to load
+                            .into(selectedImageView);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle potential errors
             }
         });
     }
@@ -163,7 +231,7 @@ public class UploadRecipe extends AppCompatActivity {
     private void logoutUser() {
         // Perform logout action
         FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(UploadRecipe.this, LoginActivity.class));
+        startActivity(new Intent(UpdateRecipeActivity.this, LoginActivity.class));
         finish(); // Close this activity
     }
 
@@ -176,14 +244,14 @@ public class UploadRecipe extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.mainFeed) {
                     // Handle upload recipe action
-                    Intent mainIntent = new Intent(UploadRecipe.this, MainFeed.class);
+                    Intent mainIntent = new Intent(UpdateRecipeActivity.this, MainFeed.class);
                     mainIntent.putExtra("email", userEmail);
                     mainIntent.putExtra("textAcronyms", textAcronyms.getText());
                     startActivity(mainIntent);
                     finish();
                     return true;
                 } else if (id == R.id.personalDetails) {
-                    Intent uploadRecipeIntent = new Intent(UploadRecipe.this, PersonalDetails.class);
+                    Intent uploadRecipeIntent = new Intent(UpdateRecipeActivity.this, PersonalDetails.class);
                     uploadRecipeIntent.putExtra("email", userEmail);
                     uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
                     startActivity(uploadRecipeIntent);
@@ -195,6 +263,7 @@ public class UploadRecipe extends AppCompatActivity {
         });
         popupMenu.show();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -227,93 +296,133 @@ public class UploadRecipe extends AppCompatActivity {
         addIngredientButton.setOnClickListener(v -> addIngredientField());
         addStepButton.setOnClickListener(v -> addStepField());
         uploadImageButton.setOnClickListener(v -> uploadImage());
-        uploadRecipeButton.setOnClickListener(v -> onSubmitClicked());
+        updateRecipe.setOnClickListener(v -> onSubmitClicked());
     }
+
 
     private void onSubmitClicked() {
         // Check if all required inputs are provided
-        if (!isRecipeNameValid() || !areTagsSelected() || !areIngredientsAdded()
+        if (!areTagsSelected() || !areIngredientsAdded()
                 || !areStepsAdded() || !isImageUploaded() || !isCookingTimeSelected()) {
             // Show a toast indicating missing inputs
             myUtils.showToast("Please fill in all required fields.");
         } else {
-            // All inputs are provided, add the recipe to the Firebase database
-            addRecipeToDatabase();
+            List<String> steps = getSteps();
+            List<Ingredient> ingredients = getIngredients();
+
+            // Validate that steps and ingredients are not empty
+            if (validateStepsNotEmpty(steps) && validateIngredientsNotEmpty(ingredients)) {
+                // All inputs are provided and non-empty, update the recipe in the Firebase database
+                List<String> selectedTags = getSelectedTags();
+                int cookingTime = cookingTimeSeekBar.getProgress();
+
+                // Update the image if it has been changed
+                Bitmap imageBitmap = getImage();
+                if (imageBitmap != null) {
+                    updateRecipeImage(imageBitmap, recipeName, selectedTags, steps, ingredients, cookingTime);
+                } else {
+                    updateRecipeData(recipeName, selectedTags, steps, ingredients, cookingTime, existingImageUrl);
+                }
+            }
         }
     }
 
-    private void addRecipeToDatabase() {
-        // Validate inputs
-        String recipeName = recipeNameEditText.getText().toString();
-        List<String> tags = getSelectedTags();
-        List<Ingredient> ingredients = getIngredients();
-        List<String> steps = getSteps();
-        int cookingTimeMinutes = cookingTimeSeekBar.getProgress();
-        long createdTimestamp = System.currentTimeMillis(); // Current timestamp
-        String createdBy = getCurrentUserId(); // Get current user ID or username
+    private String getExistingImageUrl(String recipeName) {
+        // Fetch the existing image URL from Firebase Database based on the recipe name
+        // You need to implement this method based on your database structure
+        // For example:
+         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
+         recipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 if (dataSnapshot.exists()) {
+                     String existingImageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
+                 }
+             }
 
-        // Get the bitmap from the selected image view
-        Bitmap bitmap = getImage();
-        if (bitmap == null) {
-            myUtils.showToast("Please select an image for the recipe.");
-            return;
-        }
+             @Override
+             public void onCancelled(@NonNull DatabaseError databaseError) {
+                 // Handle potential errors
+             }
+         });
+        // Return the existing image URL
+        return ""; // Placeholder, replace with actual implementation
+    }
 
-        // Logging: Check if the bitmap is retrieved successfully
-        Log.d("UploadRecipe", "Bitmap retrieved successfully");
-
-        // Upload the image to Firebase Storage
+    private void updateRecipeImage(Bitmap imageBitmap, String recipeName, List<String> selectedTags,
+                                   List<String> steps, List<Ingredient> ingredients, int cookingTime) {
+        // Get the Firebase Storage reference
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         String imageFileName = "recipe_" + recipeName + ".png";
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + imageFileName);
+
+        // Convert the image bitmap to a byte array
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = storageRef.putBytes(data);
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageData = baos.toByteArray();
 
-        // Logging: Indicate when the image upload starts
-        Log.d("UploadRecipe", "Image upload started");
-
-        // Listen for upload success or failure
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            // Image uploaded successfully, get the download URL
-            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                String imageUrl = uri.toString();
-
-                // Create a new Recipe object
-                Recipe recipe = new Recipe(recipeName, tags, ingredients, steps, cookingTimeMinutes, createdTimestamp, createdBy, imageUrl);
-
-                // Get a reference to the "Recipes" node in the database
-                databaseReference.child("Recipes")
-                        .child(recipeName)
-                        .setValue(recipe)
-                        .addOnSuccessListener(aVoid -> {
-                            // Recipe added successfully
-                            myUtils.showToast("Recipe added to database!");
-
-                            // Logging: Indicate when the recipe is added successfully
-                            Log.d("UploadRecipe", "Recipe added to database");
-                            finish();
-                            // Navigate to MainFeed activity
-                            Intent mainFeedIntent = new Intent(UploadRecipe.this, MainFeed.class);
-                            mainFeedIntent.putExtra("email", userEmail); // Assuming userEmail is the variable holding the email
-                            mainFeedIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(mainFeedIntent);
-                        })
-                        .addOnFailureListener(e -> {
-                            // Error adding recipe to database
-                            myUtils.showToast("Failed to add recipe to database: " + e.getMessage());
-
-                            // Logging: Log the error message if adding recipe fails
-                            Log.e("UploadRecipe", "Failed to add recipe to database", e);
-                        });
-            });
-        }).addOnFailureListener(e -> {
-            // Error uploading image
-            myUtils.showToast("Failed to upload image: " + e.getMessage());
-
-            // Logging: Log the error message if image upload fails
-            Log.e("UploadRecipe", "Failed to upload image", e);
+        // Upload the image to Firebase Storage
+        UploadTask uploadTask = storageRef.putBytes(imageData);
+        uploadTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Image uploaded successfully, get the download URL
+                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Update the image URL in the recipe data
+                    String imageUrl = uri.toString();
+                    updateRecipeData(recipeName, selectedTags, steps, ingredients, cookingTime, imageUrl);
+                }).addOnFailureListener(e -> {
+                    // Handle any errors that occurred while getting the download URL
+                    myUtils.showToast("Failed to get image URL: " + e.getMessage());
+                });
+            } else {
+                // Handle image upload failure
+                myUtils.showToast("Failed to upload image: " + task.getException().getMessage());
+            }
         });
+    }
+
+    private void updateRecipeData(String recipeName, List<String> selectedTags,
+                                  List<String> steps, List<Ingredient> ingredients, int cookingTime, String imageUrl) {
+        // Create a map to hold the updated recipe data
+        HashMap<String, Object> updatedRecipeData = new HashMap<>();
+        updatedRecipeData.put("tags", selectedTags);
+        updatedRecipeData.put("ingredients", ingredients);
+        updatedRecipeData.put("steps", steps);
+        updatedRecipeData.put("cookingTimeMinutes", cookingTime);
+        updatedRecipeData.put("imageUrl", imageUrl); // Update the image URL
+
+        // Update the recipe data in the Firebase database
+        DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
+        recipeRef.updateChildren(updatedRecipeData)
+                .addOnSuccessListener(aVoid -> {
+                    // Recipe data updated successfully
+                    myUtils.showToast("Recipe updated successfully!");
+                    Intent intent = new Intent(UpdateRecipeActivity.this, MainFeed.class);
+                    startActivity(intent);
+                    finish(); // Finish the activity after updating
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occurred during database update
+                    myUtils.showToast("Failed to update recipe: " + e.getMessage());
+                });
+    }
+
+    private boolean validateStepsNotEmpty(List<String> steps) {
+        for (String step : steps) {
+            if (step.trim().isEmpty()) {
+                return false; // At least one step is empty
+            }
+        }
+        return true; // All steps are not empty
+    }
+
+    private boolean validateIngredientsNotEmpty(List<Ingredient> ingredients) {
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient.getName().trim().isEmpty() || ingredient.getQuantity() <= 0) {
+                return false; // At least one ingredient is empty or has invalid data
+            }
+        }
+        return true; // All ingredients are not empty and have valid data
     }
 
 
@@ -395,11 +504,6 @@ public class UploadRecipe extends AppCompatActivity {
         }
     }
 
-
-    private boolean isRecipeNameValid() {
-        String recipeName = recipeNameEditText.getText().toString().trim();
-        return !recipeName.isEmpty();
-    }
 
     private boolean areTagsSelected() {
         return tagsChipGroup.getCheckedChipIds().size() > 0;
@@ -534,6 +638,93 @@ public class UploadRecipe extends AppCompatActivity {
         ingredientsLayout.addView(removeButton);
     }
 
+    private void addIngredientField(String name, String quantity, String unit) {
+        // TextView for ingredient label
+        TextView label = new TextView(this);
+        label.setText("Ingredient #" + ingredientCounter++);
+        label.setTextColor(getResources().getColor(android.R.color.black));
+        label.setTextSize(20); // Adjust font size as needed
+        label.setTypeface(null, Typeface.BOLD);
+        ingredientsLayout.addView(label);
+
+        // EditText for ingredient name
+        EditText ingredientNameEditText = new EditText(this);
+        ingredientNameEditText.setId(ingredientsIDCounter);
+        ingredientEditTextIds.add(ingredientsIDCounter);
+        ingredientsIDCounter++;
+        ingredientNameEditText.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        ingredientNameEditText.setHint("Enter ingredient name");
+        ingredientNameEditText.setHintTextColor(getResources().getColor(android.R.color.black));
+        ingredientNameEditText.setTextColor(-16777216);
+        ingredientNameEditText.setText(name); // Set the name provided
+        ingredientsLayout.addView(ingredientNameEditText);
+
+        // EditText for ingredient quantity
+        EditText ingredientQuantityEditText = new EditText(this);
+        ingredientQuantityEditText.setId(ingredientsIDCounter);
+        ingredientEditTextIds.add(ingredientsIDCounter);
+        ingredientsIDCounter++;
+        ingredientQuantityEditText.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        ingredientQuantityEditText.setHint("Enter quantity");
+        ingredientQuantityEditText.setTextColor(-16777216);
+        ingredientQuantityEditText.setHintTextColor(getResources().getColor(android.R.color.black));
+        ingredientQuantityEditText.setText(quantity); // Set the quantity provided
+        ingredientsLayout.addView(ingredientQuantityEditText);
+
+        // Spinner for selecting unit
+        Spinner unitSpinner = new Spinner(this);
+        String unitSpinnerId = "UnitSpinner" + ingredientCounter;
+        unitSpinner.setId(ingredientsIDCounter);
+        ingredientEditTextIds.add(ingredientsIDCounter);
+        ingredientsIDCounter++;
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.units_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitSpinner.setAdapter(adapter);
+
+        // Set the text color for dropdown items
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                ((TextView) selectedItemView).setTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing
+            }
+        });
+        unitSpinner.setSelection(adapter.getPosition(unit)); // Set the unit provided
+        ingredientsLayout.addView(unitSpinner);
+
+        // Button to remove the ingredient field
+        Button removeButton = new Button(this);
+        removeButton.setText("Remove");
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove the views associated with this ingredient field
+                ingredientsLayout.removeView(label);
+                ingredientsLayout.removeView(ingredientNameEditText);
+                ingredientsLayout.removeView(ingredientQuantityEditText);
+                ingredientsLayout.removeView(unitSpinner);
+                ingredientsLayout.removeView(removeButton);
+                // Remove the IDs from the list
+                ingredientEditTextIds.remove(Integer.valueOf(ingredientNameEditText.getId()));
+                ingredientEditTextIds.remove(Integer.valueOf(ingredientQuantityEditText.getId()));
+                ingredientEditTextIds.remove(Integer.valueOf(unitSpinner.getId()));
+                // Update the ingredient counter
+                ingredientCounter--;
+            }
+        });
+        ingredientsLayout.addView(removeButton);
+    }
+
 
     private void addStepField() {
         // TextView for step label
@@ -560,11 +751,72 @@ public class UploadRecipe extends AppCompatActivity {
         stepEditTextIds.add(stepsIDCounter);
         stepsIDCounter++;
 
+        // Button to remove the step field
+        Button removeButton = new Button(this);
+        removeButton.setText("Remove");
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove the views associated with this step field
+                stepsLayout.removeView(label);
+                stepsLayout.removeView(stepEditText);
+                stepsLayout.removeView(removeButton);
+                // Remove the ID from the list
+                stepEditTextIds.remove(Integer.valueOf(stepEditText.getId()));
+                // Update the step counter
+                stepCounter--;
+            }
+        });
+        stepsLayout.addView(removeButton);
     }
 
+    private void addStepField(String existingStep) {
+        // TextView for step label
+        TextView label = new TextView(this);
+        label.setText("Step #" + stepCounter++);
+        label.setTextColor(getResources().getColor(android.R.color.black));
+        label.setTextSize(20); // Adjust font size as needed
+        label.setTypeface(null, Typeface.BOLD);
+        stepsLayout.addView(label);
+
+        // EditText for step description
+        EditText stepEditText = new EditText(this);
+        String stepEditTextId = "StepNum" + stepCounter;
+        stepEditText.setId(stepsIDCounter);
+        stepEditText.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        stepEditText.setHint(existingStep);
+        stepEditText.setHintTextColor(-16777216);
+        stepEditText.setTextColor(-16777216);
+        stepEditText.setText(existingStep);
+        stepsLayout.addView(stepEditText);
+
+        // Add the ID of the step EditText to the list
+        stepEditTextIds.add(stepsIDCounter);
+        stepsIDCounter++;
+
+        // Button to remove the step field
+        Button removeButton = new Button(this);
+        removeButton.setText("Remove");
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove the views associated with this step field
+                stepsLayout.removeView(label);
+                stepsLayout.removeView(stepEditText);
+                stepsLayout.removeView(removeButton);
+                // Remove the ID from the list
+                stepEditTextIds.remove(Integer.valueOf(stepEditText.getId()));
+                // Update the step counter
+                stepCounter--;
+            }
+        });
+        stepsLayout.addView(removeButton);
+    }
 
     private void findViews() {
-        headlineTextView = findViewById(R.id.headlineTextView);
+        recipeNameTextView = findViewById(R.id.recipeNameTextView);
         recipeNameEditText = findViewById(R.id.recipeNameEditText);
         tagsChipGroup = findViewById(R.id.tagsChipGroup);
         ingredientsLayout = findViewById(R.id.ingredientsLayout);
@@ -572,7 +824,7 @@ public class UploadRecipe extends AppCompatActivity {
         stepsLayout = findViewById(R.id.stepsLayout);
         addStepButton = findViewById(R.id.addStepButton);
         uploadImageButton = findViewById(R.id.uploadImageButton);
-        uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
+        updateRecipe = findViewById(R.id.updateRecipeButton);
         selectedImageView = findViewById(R.id.selectedImageView);
         cookingTimeSeekBar = findViewById(R.id.cookingTimeSeekBar);
         selectedCookingTimeText = findViewById(R.id.selectedCookingTimeText);

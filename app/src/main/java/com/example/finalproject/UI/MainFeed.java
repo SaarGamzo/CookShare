@@ -453,6 +453,7 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
         // Handle the recipe click here
         Intent intent = new Intent(MainFeed.this, RecipePageActivity.class);
         intent.putExtra("recipeName", recipe.getRecipeName());
+        intent.putExtra("textAcronyms", textAcronyms.getText());
         startActivity(intent);
     }
 }
