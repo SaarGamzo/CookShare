@@ -11,12 +11,15 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.finalproject.Models.User;
 import com.example.finalproject.R;
 import com.example.finalproject.Utils.DatabaseUtils;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,7 +34,7 @@ import java.util.List;
 public class RecipePageActivity extends AppCompatActivity {
 
     private TextView recipeHeadline, tags, ingredients, steps, cookingTime , textAcronyms;
-    private ImageView recipeImage, updateRecipeIcon;
+    private ImageView recipeImage, updateRecipeIcon, removeRecipeIcon;
 
     private String userEmail;
     private String createdByUID;
@@ -63,6 +66,13 @@ public class RecipePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showMenuOptions();
+            }
+        });
+
+        removeRecipeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteConfirmationDialog(recipeName);
             }
         });
 
@@ -196,6 +206,7 @@ public class RecipePageActivity extends AppCompatActivity {
 
         textAcronyms = findViewById(R.id.textAcronyms);
         updateRecipeIcon = findViewById(R.id.updateRecipeIcon);
+        removeRecipeIcon = findViewById(R.id.removeRecipeIcon);
     }
 
     private void fetchRecipeDetails(String recipeName) {
@@ -220,6 +231,7 @@ public class RecipePageActivity extends AppCompatActivity {
 
                     if (createdByUID != null && verifySelfCreatedRecipe()) {
                         updateRecipeIcon.setVisibility(View.VISIBLE);
+                        removeRecipeIcon.setVisibility(View.VISIBLE);
                     }
 
                     // Set the retrieved data to TextViews and ImageView
@@ -246,16 +258,45 @@ public class RecipePageActivity extends AppCompatActivity {
         });
     }
 
-    private String convertIngredientsListToString(DataSnapshot ingredientsSnapshot) {
-        StringBuilder ingredientsBuilder = new StringBuilder();
-        for (DataSnapshot ingredient : ingredientsSnapshot.getChildren()) {
-            String name = ingredient.child("name").getValue(String.class);
-            int quantity = ingredient.child("quantity").getValue(Integer.class);
-            String unit = ingredient.child("unit").getValue(String.class);
-            ingredientsBuilder.append(name).append(": ").append(quantity).append(" ").append(unit).append("\n");
-        }
-        return ingredientsBuilder.toString();
+    private void showDeleteConfirmationDialog(String recipeName) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Deletion");
+        builder.setMessage("Are you sure you want to delete the recipe '" + recipeName + "'?");
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // User confirmed deletion, call the function to delete the recipe
+                deleteRecipe(recipeName);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // User canceled deletion, do nothing
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
+
+    public void deleteRecipe(String recipeName){
+        // Remove the recipe from the database
+        DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Recipe successfully deleted
+                Log.d("DatabaseUtils", "Recipe deleted successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Failed to delete the recipe
+                Log.e("DatabaseUtils", "Error deleting recipe: " + e.getMessage());
+            }
+        });
+
+    }
+
 
     private String convertIngredientsListToString(List<String> ingredientsList) {
         StringBuilder ingredientsBuilder = new StringBuilder();

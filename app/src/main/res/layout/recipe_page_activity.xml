@@ -70,6 +70,19 @@
                 android:layout_marginStart="8dp"
                 android:src="@drawable/edit"
                 />
+
+            <ImageView
+                android:id="@+id/removeRecipeIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/remove"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:visibility="invisible"
+                />
             <TextView
                 android:id="@+id/recipeHeadline"
                 android:layout_width="match_parent"
