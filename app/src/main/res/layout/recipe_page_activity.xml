@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/bez">
 
     <!-- Upper Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightBlue">
+        android:id="@+id/appBarLayout"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
+        >
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/lightgrey"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:titleTextColor="@android:color/black">
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <!-- Acronyms of Full Name in a Circle (Left) -->
             <LinearLayout
@@ -67,7 +67,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:visibility="invisible"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:src="@drawable/edit"
                 />
 
@@ -116,24 +116,52 @@
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tags"
+            <!-- Tags Table -->
+            <RelativeLayout
+                android:id="@+id/relativeLayoutTags"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tagsHeadline"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="the tags"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_below="@id/tagsHeadline">
+
+                <TableLayout
+                    android:id="@+id/tagsTableLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:background="@drawable/table_outline"
+                    android:padding="16dp">
+
+                    <!-- Table headers for Tags -->
+                    <TableRow>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ID"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tag"
+                            android:padding="10dp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+            </RelativeLayout>
+
 
             <!-- Ingredients -->
             <TextView
                 android:id="@+id/ingredientsHeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tags"
+                android:layout_below="@id/relativeLayoutTags"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="Ingredients:"
@@ -141,24 +169,69 @@
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/ingredients"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutIngredients"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ingredientsHeadline"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="the ingrediens"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_below="@id/ingredientsHeadline">
+
+                <TableLayout
+                    android:id="@+id/ingredientsTableLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:background="@drawable/table_outline"
+                    android:padding="16dp">
+
+                    <!-- Table headers for Ingredients -->
+                    <TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ID"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Quantity"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Unit"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+            </RelativeLayout>
+
 
             <!-- Steps -->
             <TextView
                 android:id="@+id/stepssHeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ingredients"
+                android:layout_below="@id/relativeLayoutIngredients"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="Steps:"
@@ -166,24 +239,51 @@
                 android:textSize="26sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/steps"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSteps"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/stepssHeadline"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="the steps"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:layout_below="@id/stepssHeadline">
+
+                <TableLayout
+                    android:id="@+id/stepsTableLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:background="@drawable/table_outline"
+                    android:padding="16dp">
+
+                    <!-- Table headers for Steps -->
+                    <TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ID"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Step"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:padding="10dp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+            </RelativeLayout>
+
 
             <!-- Cooking time -->
             <TextView
                 android:id="@+id/cookingTimeHeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/steps"
+                android:layout_below="@id/relativeLayoutSteps"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="Cooking time:"

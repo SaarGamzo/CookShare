@@ -2,12 +2,15 @@ package com.example.finalproject.UI;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,14 +21,13 @@ import com.bumptech.glide.Glide;
 import com.example.finalproject.Models.User;
 import com.example.finalproject.R;
 import com.example.finalproject.Utils.DatabaseUtils;
+import com.example.finalproject.Utils.MyUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -33,15 +35,13 @@ import java.util.List;
 
 public class RecipePageActivity extends AppCompatActivity {
 
-    private TextView recipeHeadline, tags, ingredients, steps, cookingTime , textAcronyms;
+    private TextView recipeHeadline, cookingTime , textAcronyms;
     private ImageView recipeImage, updateRecipeIcon, removeRecipeIcon;
-
     private String userEmail;
     private String createdByUID;
-    private ImageView cookingTimeImg;
     private ImageView menuIcon;
     private String recipeName;
-
+    private MyUtils myUtils;
     FirebaseUser currentUser;
 
     @Override
@@ -50,7 +50,7 @@ public class RecipePageActivity extends AppCompatActivity {
         setContentView(R.layout.recipe_page_activity);
         findViews();
         currentUser = DatabaseUtils.getInstance().getCurrentUser();
-
+        myUtils = MyUtils.getInstance(this);
         // Get intent extras from previous activity
         Intent intent = getIntent();
         if (intent != null) {
@@ -194,14 +194,10 @@ public class RecipePageActivity extends AppCompatActivity {
     private void findViews() {
         // Initialize TextViews
         recipeHeadline = findViewById(R.id.recipeHeadline);
-        tags = findViewById(R.id.tags);
-        ingredients = findViewById(R.id.ingredients);
-        steps = findViewById(R.id.steps);
         cookingTime = findViewById(R.id.cookingTime);
 
         // Initialize ImageView
         recipeImage = findViewById(R.id.recipeImage);
-        cookingTimeImg = findViewById(R.id.cookingTimeImg);
         menuIcon = findViewById(R.id.menuIcon);
 
         textAcronyms = findViewById(R.id.textAcronyms);
@@ -236,12 +232,11 @@ public class RecipePageActivity extends AppCompatActivity {
 
                     // Set the retrieved data to TextViews and ImageView
                     recipeHeadline.setText(recipeName);
-                    tags.setText(convertTagsToString(recipeTags));
-                    steps.setText(convertTagsToString(recipeSteps));
+                    updateTagsTable(recipeTags);
+                    updateStepsTable(recipeSteps);
                     cookingTime.setText(recipeCookingTime);
                     // Set ingredients as a single string
-                    ingredients.setText(convertIngredientsListToString(ingredientsList));
-
+                    updateIngredientsTable(ingredientsList);
                     // Load the recipe image using the provided URL
                     Glide.with(RecipePageActivity.this)
                             .load(imageUrl)
@@ -285,7 +280,12 @@ public class RecipePageActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 // Recipe successfully deleted
-                Log.d("DatabaseUtils", "Recipe deleted successfully");
+                Log.d("DatabaseUtils", "Recipe: " + recipeName +" deleted successfully!");
+                myUtils.showToast("Recipe removed successfully!");
+                Intent uploadRecipeIntent = new Intent(RecipePageActivity.this, MainFeed.class);
+                uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                startActivity(uploadRecipeIntent);
+                finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -298,24 +298,101 @@ public class RecipePageActivity extends AppCompatActivity {
     }
 
 
-    private String convertIngredientsListToString(List<String> ingredientsList) {
-        StringBuilder ingredientsBuilder = new StringBuilder();
-        int i = 1;
-        for (String ingredient : ingredientsList) {
-            ingredientsBuilder.append("#" + i + " : " + ingredient).append("\n");
-            i++;
+    private void updateTagsTable(ArrayList<String> tags) {
+        TableLayout tagsTableLayout = findViewById(R.id.tagsTableLayout);
+        int id = 1; // Start ID from 1
+        for (String tag : tags) {
+            TableRow row = new TableRow(this);
+
+            TextView idTextView = new TextView(this);
+            idTextView.setText(String.valueOf(id));
+            idTextView.setTextColor(Color.BLACK); // Set text color to black
+            idTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+            row.addView(idTextView);
+
+            TextView tagTextView = new TextView(this);
+            tagTextView.setText(tag);
+            tagTextView.setTextColor(Color.BLACK); // Set text color to black
+            tagTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+            row.addView(tagTextView);
+
+            tagsTableLayout.addView(row);
+            id++; // Increment ID for the next row
         }
-        return ingredientsBuilder.toString();
     }
 
-    public static String convertTagsToString(ArrayList<String> tags) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int i = 1;
-        for (String tag : tags) {
-            stringBuilder.append("#" + i + " - " + tag).append("\n");  // Add each tag followed by a comma and space
-            i++;
+    private void updateStepsTable(ArrayList<String> steps) {
+        TableLayout stepsTableLayout = findViewById(R.id.stepsTableLayout);
+        int id = 1;
+        for (String step : steps) {
+
+            TableRow row = new TableRow(this);
+            TextView idTextView = new TextView(this);
+            idTextView.setText(String.valueOf(id));
+            idTextView.setTextColor(Color.BLACK); // Set text color to black
+            idTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+            row.addView(idTextView);
+
+            TextView textView = new TextView(this);
+            textView.setText(step);
+            textView.setTextColor(Color.BLACK); // Set text color to black
+            row.addView(textView);
+            stepsTableLayout.addView(row);
+            id++;
         }
-        return stringBuilder.toString();
+    }
+
+    private void updateIngredientsTable(List<String> ingredientsList) {
+        TableLayout ingredientsTableLayout = findViewById(R.id.ingredientsTableLayout);
+        int id = 1;
+        for (String ingredient : ingredientsList) {
+            // Split the ingredient string into name, quantity, and unit
+            String[] parts = ingredient.split(": ");
+            if (parts.length == 2) {
+                String name = parts[0];
+                String quantityAndUnit = parts[1];
+
+                // Split quantity and unit
+                String[] quantityUnit = quantityAndUnit.split(" ");
+                if (quantityUnit.length == 2) {
+                    String quantity = quantityUnit[0];
+                    String unit = quantityUnit[1];
+
+                    TableRow row = new TableRow(this);
+
+                    // ID column
+                    TextView idTextView = new TextView(this);
+                    idTextView.setText(String.valueOf(id));
+                    idTextView.setTextColor(Color.BLACK); // Set text color to black
+                    idTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    row.addView(idTextView);
+
+                    // Name column
+                    TextView nameTextView = new TextView(this);
+                    nameTextView.setText(name);
+                    nameTextView.setTextColor(Color.BLACK); // Set text color to black
+                    nameTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    row.addView(nameTextView);
+
+                    // Quantity column
+                    TextView quantityTextView = new TextView(this);
+                    quantityTextView.setText(quantity);
+                    quantityTextView.setTextColor(Color.BLACK); // Set text color to black
+                    quantityTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    row.addView(quantityTextView);
+
+                    // Unit column
+                    TextView unitTextView = new TextView(this);
+                    unitTextView.setText(unit);
+                    unitTextView.setTextColor(Color.BLACK); // Set text color to black
+                    unitTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    row.addView(unitTextView);
+
+                    ingredientsTableLayout.addView(row);
+                    id++;
+                }
+            }
+        }
     }
 
     private String getCurrentUserId() {
@@ -330,7 +407,6 @@ public class RecipePageActivity extends AppCompatActivity {
 
     private boolean verifySelfCreatedRecipe() {
         String currentUserId = getCurrentUserId();
-        Log.d("RecipePageActivity", "Going to compare createdByUID: " + createdByUID + ", to currentUserId: " + currentUserId);
         return createdByUID.equals(currentUserId); // Make sure createdByUID is not null here
     }
 }

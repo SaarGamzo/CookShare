@@ -2,15 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightgrey">
+    android:background="@drawable/background"
+    >
 
     <!-- Title or Logo -->
     <ImageView
         android:id="@+id/logoImageView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
         android:src="@drawable/logo" />
 
     <!-- Centered text label "Please login:" -->
@@ -18,9 +19,9 @@
         android:id="@+id/loginLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/logoImageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_below="@id/logoImageView"
         android:text="Please login:"
         android:textStyle="bold"
         android:textColor="@android:color/black"
@@ -29,46 +30,49 @@
     <!-- Email and Password Fields -->
     <EditText
         android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="220dp"
+        android:layout_height="80dp"
         android:layout_below="@id/loginLabel"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/edit_text_background"
         android:hint="Enter email..."
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textColorHint="@android:color/black"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:gravity="center"/>
 
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="50dp"
         android:layout_below="@id/emailEditText"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/edit_text_background"
         android:hint="Enter password..."
         android:inputType="textPassword"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textColorHint="@android:color/black"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:gravity="center"/>
 
 
     <!-- Login Button -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordEditText"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="72dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        android:text="Login" />
+        android:background="@drawable/red_button_bg"
+        android:text="Login"
+        android:textColor="@color/black"
+        />
 
     <!-- Registration Link -->
     <TextView

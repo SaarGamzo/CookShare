@@ -112,7 +112,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             textRecipeName.setText(recipe.getRecipeName());
             textSteps.setText("Steps: " + recipe.getSteps().size()); // Example, replace with actual steps count
             textIngredients.setText("Ingredients: " + recipe.getIngredients().size()); // Example, replace with actual ingredients count
-            textPreparationTime.setText("Time: " + recipe.getCookingTimeMinutes() + " min");
+            textPreparationTime.setText("Cooking Time: " + recipe.getCookingTimeMinutes() + " min");
             // Load recipe image using Glide
             Glide.with(itemView.getContext())
                     .load(recipe.getImageUrl())

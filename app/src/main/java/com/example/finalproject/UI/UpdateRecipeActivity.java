@@ -613,7 +613,11 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the ingredient field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove");
+        removeButton.setText("Remove Ingredient");
+        removeButton.setBackgroundResource(R.drawable.red_button_bg);
+
+        // Set text color to black
+        removeButton.setTextColor(Color.BLACK);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -700,7 +704,11 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the ingredient field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove");
+        removeButton.setText("Remove Ingredient");
+        removeButton.setBackgroundResource(R.drawable.red_button_bg);
+
+        // Set text color to black
+        removeButton.setTextColor(Color.BLACK);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -749,7 +757,11 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the step field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove");
+        removeButton.setText("Remove Step");
+        removeButton.setBackgroundResource(R.drawable.red_button_bg);
+
+        // Set text color to black
+        removeButton.setTextColor(Color.BLACK);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -794,7 +806,11 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the step field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove");
+        removeButton.setText("Remove Step");
+        removeButton.setBackgroundResource(R.drawable.red_button_bg);
+
+        // Set text color to black
+        removeButton.setTextColor(Color.BLACK);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -841,7 +857,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
             chip.setChipBackgroundColorResource(R.color.lightgrey);
             chip.setOnCheckedChangeListener((compoundButton, isChecked) -> {
                 if (isChecked) {
-                    chip.setChipBackgroundColorResource(R.color.lightBlue); // Set background color for checked state
+                    chip.setChipBackgroundColorResource(R.color.lightRed); // Set background color for checked state
                 } else {
                     chip.setChipBackgroundColorResource(R.color.lightgrey); // Set background color for unchecked state
                 }

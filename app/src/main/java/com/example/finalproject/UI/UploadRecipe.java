@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -527,9 +528,18 @@ public class UploadRecipe extends AppCompatActivity {
         });
         ingredientsLayout.addView(unitSpinner);
 
+
         // Button to remove the ingredient field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove");
+        removeButton.setText("Remove Ingredient");
+
+        // Set the background drawable programmatically
+        removeButton.setBackgroundResource(R.drawable.red_button_bg);
+
+        // Set text color to black
+        removeButton.setTextColor(Color.BLACK);
+
+
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -578,7 +588,11 @@ public class UploadRecipe extends AppCompatActivity {
 
         // Button to remove the step field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove");
+        removeButton.setText("Remove Step");
+        removeButton.setBackgroundResource(R.drawable.red_button_bg);
+
+        // Set text color to black
+        removeButton.setTextColor(Color.BLACK);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -627,7 +641,7 @@ public class UploadRecipe extends AppCompatActivity {
             chip.setChipBackgroundColorResource(R.color.lightgrey);
             chip.setOnCheckedChangeListener((compoundButton, isChecked) -> {
                 if (isChecked) {
-                    chip.setChipBackgroundColorResource(R.color.lightBlue); // Set background color for checked state
+                    chip.setChipBackgroundColorResource(R.color.lightRed); // Set background color for checked state
                 } else {
                     chip.setChipBackgroundColorResource(R.color.lightgrey); // Set background color for unchecked state
                 }

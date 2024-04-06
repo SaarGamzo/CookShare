@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightgrey">
+    android:background="@drawable/background">
 
     <!-- Title or Logo -->
     <ImageView
         android:id="@+id/logoImageView"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
         android:src="@drawable/logo" />
 
     <!-- Headline "Register" -->
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logoImageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Register"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -29,13 +29,12 @@
     <!-- Input for Full Name -->
     <EditText
         android:id="@+id/fullNameEditText"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="50dp"
         android:layout_below="@id/registerHeadline"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/edit_text_background"
         android:hint="Full Name"
         android:textColorHint="@android:color/black"
         android:textColor="@color/black"
@@ -49,8 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/fullNameEditText"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Select Date of Birth" />
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/lightRed"
+        android:text="Select Date of Birth"
+        android:textColor="@color/black"/>
 
     <!-- TextView to display selected date -->
     <TextView
@@ -66,13 +67,10 @@
     <!-- Input for Email -->
     <EditText
         android:id="@+id/registerEmailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="220dp"
+        android:layout_height="70dp"
         android:layout_below="@id/selectedDateTextView"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:background="@drawable/edit_text_background"
+        android:layout_marginStart="70dp"
         android:hint="Email"
         android:textColorHint="@android:color/black"
         android:textColor="@color/black"
@@ -82,13 +80,11 @@
     <!-- Input for Password -->
     <EditText
         android:id="@+id/registerPasswordEditText"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="50dp"
         android:layout_below="@id/registerEmailEditText"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:background="@drawable/edit_text_background"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="10dp"
         android:hint="Password"
         android:inputType="textPassword"
         android:textColorHint="@android:color/black"
@@ -99,13 +95,12 @@
     <!-- Input to Validate Password -->
     <EditText
         android:id="@+id/validatePasswordEditText"
-        android:layout_width="match_parent"
+        android:layout_width="220dp"
         android:layout_height="50dp"
         android:layout_below="@id/registerPasswordEditText"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/edit_text_background"
         android:hint="Confirm Password"
         android:inputType="textPassword"
         android:textColorHint="@android:color/black"
@@ -116,12 +111,16 @@
     <!-- Register Button -->
     <Button
         android:id="@+id/registerButton"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/validatePasswordEditText"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="110dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        android:text="Register" />
+        android:backgroundTint="@color/lightBlue"
+        android:text="Register"
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"
+        />
 
 </RelativeLayout>
