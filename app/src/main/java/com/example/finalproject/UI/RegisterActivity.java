@@ -15,18 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.finalproject.R;
+import com.example.finalproject.Utils.DatabaseUtils;
 import com.example.finalproject.Utils.MyUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -38,11 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private Button selectDateOfBirthButton;
     private TextView selectedDateTextView;
-    private FirebaseAuth mAuth;
     private MyUtils myUtils;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initUtils() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
         myUtils = MyUtils.getInstance(this);
-        mAuth = FirebaseAuth.getInstance();
     }
 
     private void findAllViews() {
@@ -148,10 +137,10 @@ public class RegisterActivity extends AppCompatActivity {
         String fullName = fullNameEditText.getText().toString().trim();
         String dateOfBirth = selectedDateTextView.getText().toString().trim();
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        DatabaseUtils.getInstance().getFirebaseAuth().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        FirebaseUser user = DatabaseUtils.getInstance().getCurrentUser();
                         if (user != null) {
                             saveUserToDatabase(email, fullName, dateOfBirth);
                             navigateToUserProfile(email);
@@ -165,7 +154,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserToDatabase(String email, String fullName, String dateOfBirth) {
-
         Map<String, Boolean> likedRecipes = new HashMap<>();
         likedRecipes.put("a", true);
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -174,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
         hashMap.put("dateOfBirth", dateOfBirth);
         hashMap.put("liked_recipes", likedRecipes);
         // Get a reference to the "users" node in the database
-        databaseReference.child("Users")
+        DatabaseUtils.getInstance().getDatabaseReference().child("Users")
                 .child(email.replace('.','!'))
                 .setValue(hashMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

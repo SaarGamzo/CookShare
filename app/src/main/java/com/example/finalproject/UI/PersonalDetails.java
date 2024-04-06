@@ -13,12 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.finalproject.Models.User;
 import com.example.finalproject.R;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.finalproject.Utils.DatabaseUtils;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class PersonalDetails extends AppCompatActivity {
@@ -28,9 +26,6 @@ public class PersonalDetails extends AppCompatActivity {
     private TextView emailTextView;
     private ImageView menuIcon;
     private TextView textAcronyms;
-    private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
-
     private String userEmail;
 
     @Override
@@ -41,16 +36,12 @@ public class PersonalDetails extends AppCompatActivity {
         userEmail = getIntent().getStringExtra("email");
         textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
 
-        // Initialize Firebase components
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-
         // Get the currently logged-in user
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        FirebaseUser user = DatabaseUtils.getInstance().getCurrentUser();
         if (user != null) {
             userEmail = userEmail.replace(".","!");
             // Query the database to fetch user data
-            databaseReference.child(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+            DatabaseUtils.getInstance().getDatabaseReference().child("Users").child(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -80,13 +71,6 @@ public class PersonalDetails extends AppCompatActivity {
             }
         });
 
-        // Set OnClickListener for Acronyms TextView
-        textAcronyms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLogoutDialog();
-            }
-        });
     }
 
     private void showMenuOptions() {
@@ -110,6 +94,10 @@ public class PersonalDetails extends AppCompatActivity {
                     uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
                     startActivity(uploadRecipeIntent);
                     finish();
+                    return true;
+                }
+                else if (id == R.id.logOutUser) {
+                    showLogoutDialog();
                     return true;
                 }
                 return false;
@@ -139,7 +127,7 @@ public class PersonalDetails extends AppCompatActivity {
 
     private void logoutUser() {
         // Perform logout action
-        FirebaseAuth.getInstance().signOut();
+        DatabaseUtils.getInstance().getFirebaseAuth().signOut();
         startActivity(new Intent(PersonalDetails.this, LoginActivity.class));
         finish(); // Close this activity
     }

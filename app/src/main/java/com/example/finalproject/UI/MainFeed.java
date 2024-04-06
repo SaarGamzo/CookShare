@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.finalproject.Models.Recipe;
 import com.example.finalproject.Models.User;
 import com.example.finalproject.R;
+import com.example.finalproject.Utils.DatabaseUtils;
 import com.example.finalproject.Utils.RecipeAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,23 +45,17 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
 
     private ImageView menuIcon;
     private TextView textAcronyms;
-
     private String userEmail;
-    private DatabaseReference usersRef;
     private DatabaseReference likedRecipesRef;
-    private FirebaseAuth mAuth;
-
     private RecyclerView recyclerViewRecipes;
     private RecipeAdapter recipeAdapter;
     private Map<String, Recipe> recipeMap; // Use map to hold all recipes
-
     private EditText searchField;
     private Button searchButton;
     private Button clearButton;
 
     private String[] tags = {"Vegetarian", "Burger", "Sushi", "Pizza", "Pasta", "Salad", "Soup", "Dessert", "Seafood", "Chicken", "Beef", "Vegan", "Gluten-free", "Low carb", "Quick"};
     private LinearLayout tagsLayout;
-
     private Map<String, Boolean> likedRecipeNames; // List to store liked recipe names
 
     @Override
@@ -71,10 +66,6 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
         // Initialize RecyclerView and recipeList
         recipeMap = new HashMap<>();
         likedRecipeNames = new HashMap<>();
-
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         // Get user email from intent extras
         Bundle extras = getIntent().getExtras();
@@ -88,7 +79,7 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
         }
 
         // Initialize Firebase database reference for liked recipes
-        likedRecipesRef = FirebaseDatabase.getInstance().getReference().child("Users").child(userEmail.replace(".", "!")).child("liked_recipes");
+        likedRecipesRef = DatabaseUtils.getInstance().getDatabaseReference().child("Users").child(userEmail.replace(".", "!")).child("liked_recipes");
         fetchAllRecipes();
         recipeAdapter = new RecipeAdapter(recipeMap, likedRecipeNames, likedRecipesRef);
         recipeAdapter.setRecipeClickListener(this);
@@ -110,7 +101,11 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
         textAcronyms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLogoutDialog();
+                Intent uploadRecipeIntent = new Intent(MainFeed.this, PersonalDetails.class);
+                uploadRecipeIntent.putExtra("email", userEmail);
+                uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                startActivity(uploadRecipeIntent);
+                finish();
             }
         });
 
@@ -167,7 +162,7 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
     }
 
     private void fetchUserLikedRecipes(String email) {
-        usersRef.child(email.replace(".", "!")).child("liked_recipes").addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseUtils.getInstance().getDatabaseReference().child("Users").child(email.replace(".", "!")).child("liked_recipes").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -277,7 +272,7 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
 
 
     private void fetchUserInformation(String email) {
-        usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+          DatabaseUtils.getInstance().getDatabaseReference().child("Users").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener(){
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -341,12 +336,8 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
             showLikedRecipes();
             return true;
         }
-        else if (id == R.id.personalDetails) {
-            Intent uploadRecipeIntent = new Intent(MainFeed.this, PersonalDetails.class);
-            uploadRecipeIntent.putExtra("email", userEmail);
-            uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
-            startActivity(uploadRecipeIntent);
-            finish();
+        else if (id == R.id.logOutUser) {
+            showLogoutDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -420,12 +411,8 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
                 } else if (id == R.id.likedRecipes) {
                     showLikedRecipes();
                     return true;
-                } else if (id == R.id.personalDetails) {
-                    Intent uploadRecipeIntent = new Intent(MainFeed.this, PersonalDetails.class);
-                    uploadRecipeIntent.putExtra("email", userEmail);
-                    uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
-                    startActivity(uploadRecipeIntent);
-                    finish();
+                } else if (id == R.id.logOutUser) {
+                    showLogoutDialog();
                     return true;
                 }
                 return false;

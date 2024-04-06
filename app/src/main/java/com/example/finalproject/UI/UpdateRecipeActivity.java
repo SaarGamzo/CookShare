@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.example.finalproject.Models.Ingredient;
 import com.example.finalproject.Models.Recipe;
 import com.example.finalproject.R;
+import com.example.finalproject.Utils.DatabaseUtils;
 import com.example.finalproject.Utils.MyUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -54,16 +55,12 @@ import java.util.List;
 
 public class UpdateRecipeActivity extends AppCompatActivity {
 
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-
     private ImageView menuIcon;
 
     private String existingImageUrl;
 
     private TextView textAcronyms;
     private TextView recipeNameTextView;
-    private EditText recipeNameEditText;
     private ChipGroup tagsChipGroup;
     private LinearLayout ingredientsLayout;
     private Button addIngredientButton;
@@ -112,8 +109,6 @@ public class UpdateRecipeActivity extends AppCompatActivity {
         recipeName = getIntent().getStringExtra("recipeName");
         textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
         myUtils = MyUtils.getInstance(this);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
         selectedImageView.setVisibility(View.VISIBLE);
         setListeners();
         populateTags();
@@ -150,7 +145,11 @@ public class UpdateRecipeActivity extends AppCompatActivity {
         textAcronyms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLogoutDialog();
+                Intent uploadRecipeIntent = new Intent(UpdateRecipeActivity.this, PersonalDetails.class);
+                uploadRecipeIntent.putExtra("email", userEmail);
+                uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                startActivity(uploadRecipeIntent);
+                finish();
             }
         });
 
@@ -158,8 +157,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
     }
 
     private void fetchRecipeDetails(String recipeName) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -230,7 +228,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
     private void logoutUser() {
         // Perform logout action
-        FirebaseAuth.getInstance().signOut();
+        DatabaseUtils.getInstance().signOutUser();
         startActivity(new Intent(UpdateRecipeActivity.this, LoginActivity.class));
         finish(); // Close this activity
     }
@@ -243,18 +241,21 @@ public class UpdateRecipeActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.mainFeed) {
-                    // Handle upload recipe action
                     Intent mainIntent = new Intent(UpdateRecipeActivity.this, MainFeed.class);
                     mainIntent.putExtra("email", userEmail);
                     mainIntent.putExtra("textAcronyms", textAcronyms.getText());
                     startActivity(mainIntent);
                     finish();
                     return true;
-                } else if (id == R.id.personalDetails) {
-                    Intent uploadRecipeIntent = new Intent(UpdateRecipeActivity.this, PersonalDetails.class);
-                    uploadRecipeIntent.putExtra("email", userEmail);
-                    uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
-                    startActivity(uploadRecipeIntent);
+                } else if (id == R.id.logOutUser) {
+                    showLogoutDialog();
+                    return true;
+                }
+                else if (id == R.id.uploadARecipe) {
+                    Intent uploadIntent = new Intent(UpdateRecipeActivity.this, UploadRecipe.class);
+                    uploadIntent.putExtra("email", userEmail);
+                    uploadIntent.putExtra("textAcronyms", textAcronyms.getText());
+                    startActivity(uploadIntent);
                     finish();
                     return true;
                 }
@@ -329,10 +330,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
     private String getExistingImageUrl(String recipeName) {
         // Fetch the existing image URL from Firebase Database based on the recipe name
-        // You need to implement this method based on your database structure
-        // For example:
-         DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
-         recipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+         DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).addListenerForSingleValueEvent(new ValueEventListener() {
              @Override
              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                  if (dataSnapshot.exists()) {
@@ -352,7 +350,6 @@ public class UpdateRecipeActivity extends AppCompatActivity {
     private void updateRecipeImage(Bitmap imageBitmap, String recipeName, List<String> selectedTags,
                                    List<String> steps, List<Ingredient> ingredients, int cookingTime) {
         // Get the Firebase Storage reference
-        FirebaseStorage storage = FirebaseStorage.getInstance();
         String imageFileName = "recipe_" + recipeName + ".png";
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + imageFileName);
 
@@ -392,8 +389,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
         updatedRecipeData.put("imageUrl", imageUrl); // Update the image URL
 
         // Update the recipe data in the Firebase database
-        DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
-        recipeRef.updateChildren(updatedRecipeData)
+        DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).updateChildren(updatedRecipeData)
                 .addOnSuccessListener(aVoid -> {
                     // Recipe data updated successfully
                     myUtils.showToast("Recipe updated successfully!");
@@ -817,7 +813,6 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
     private void findViews() {
         recipeNameTextView = findViewById(R.id.recipeNameTextView);
-        recipeNameEditText = findViewById(R.id.recipeNameEditText);
         tagsChipGroup = findViewById(R.id.tagsChipGroup);
         ingredientsLayout = findViewById(R.id.ingredientsLayout);
         addIngredientButton = findViewById(R.id.addIngredientButton);

@@ -9,14 +9,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.finalproject.Models.Recipe;
 import com.example.finalproject.Models.User;
 import com.example.finalproject.R;
-import com.example.finalproject.Utils.RecipeAdapter;
+import com.example.finalproject.Utils.DatabaseUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,9 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RecipePageActivity extends AppCompatActivity {
 
@@ -37,22 +35,18 @@ public class RecipePageActivity extends AppCompatActivity {
 
     private String userEmail;
     private String createdByUID;
-
     private ImageView cookingTimeImg;
     private ImageView menuIcon;
-
     private String recipeName;
 
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
-    private DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_page_activity);
         findViews();
+        currentUser = DatabaseUtils.getInstance().getCurrentUser();
 
         // Get intent extras from previous activity
         Intent intent = getIntent();
@@ -113,7 +107,7 @@ public class RecipePageActivity extends AppCompatActivity {
 
     private void logoutUser() {
         // Perform logout action
-        FirebaseAuth.getInstance().signOut();
+        DatabaseUtils.getInstance().signOutUser();
         startActivity(new Intent(RecipePageActivity.this, LoginActivity.class));
         finish(); // Close this activity
     }
@@ -149,7 +143,7 @@ public class RecipePageActivity extends AppCompatActivity {
 
 
     private void fetchUserInformation(String email) {
-        usersRef.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseUtils.getInstance().getDatabaseReference().child("Users").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -205,8 +199,7 @@ public class RecipePageActivity extends AppCompatActivity {
     }
 
     private void fetchRecipeDetails(String recipeName) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeName);
-        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

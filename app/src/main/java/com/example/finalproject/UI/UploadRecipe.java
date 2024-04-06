@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.finalproject.Models.Ingredient;
 import com.example.finalproject.Models.Recipe;
 import com.example.finalproject.R;
+import com.example.finalproject.Utils.DatabaseUtils;
 import com.example.finalproject.Utils.MyUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -47,10 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UploadRecipe extends AppCompatActivity {
-
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-
     private ImageView menuIcon;
     private TextView headlineTextView;
     private EditText recipeNameEditText;
@@ -102,8 +99,6 @@ public class UploadRecipe extends AppCompatActivity {
             textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
         }
         myUtils = MyUtils.getInstance(this);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
         selectedImageView.setVisibility(View.GONE);
         setListeners();
         populateTags();
@@ -136,7 +131,11 @@ public class UploadRecipe extends AppCompatActivity {
         textAcronyms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLogoutDialog();
+                Intent uploadRecipeIntent = new Intent(UploadRecipe.this, PersonalDetails.class);
+                uploadRecipeIntent.putExtra("email", userEmail);
+                uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                startActivity(uploadRecipeIntent);
+                finish();
             }
         });
     }
@@ -162,7 +161,7 @@ public class UploadRecipe extends AppCompatActivity {
 
     private void logoutUser() {
         // Perform logout action
-        FirebaseAuth.getInstance().signOut();
+        DatabaseUtils.getInstance().signOutUser();
         startActivity(new Intent(UploadRecipe.this, LoginActivity.class));
         finish(); // Close this activity
     }
@@ -182,12 +181,8 @@ public class UploadRecipe extends AppCompatActivity {
                     startActivity(mainIntent);
                     finish();
                     return true;
-                } else if (id == R.id.personalDetails) {
-                    Intent uploadRecipeIntent = new Intent(UploadRecipe.this, PersonalDetails.class);
-                    uploadRecipeIntent.putExtra("email", userEmail);
-                    uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
-                    startActivity(uploadRecipeIntent);
-                    finish();
+                } else if (id == R.id.logOutUser) {
+                    showLogoutDialog();
                     return true;
                 }
                 return false;
@@ -285,7 +280,7 @@ public class UploadRecipe extends AppCompatActivity {
 
         // Upload the image to Firebase Storage
         String imageFileName = "recipe_" + recipeName + ".png";
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/" + imageFileName);
+        StorageReference storageRef = DatabaseUtils.getInstance().getFirebaseStorage().getReference().child("images/" + imageFileName);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -304,7 +299,7 @@ public class UploadRecipe extends AppCompatActivity {
                 Recipe recipe = new Recipe(recipeName, tags, ingredients, steps, cookingTimeMinutes, createdTimestamp, createdBy, imageUrl);
 
                 // Get a reference to the "Recipes" node in the database
-                databaseReference.child("Recipes")
+                DatabaseUtils.getInstance().getDatabaseReference().child("Recipes")
                         .child(recipeName)
                         .setValue(recipe)
                         .addOnSuccessListener(aVoid -> {
@@ -407,7 +402,7 @@ public class UploadRecipe extends AppCompatActivity {
     }
 
     private String getCurrentUserId() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser currentUser = DatabaseUtils.getInstance().getCurrentUser();
         if (currentUser != null) {
             return currentUser.getUid();
         } else {

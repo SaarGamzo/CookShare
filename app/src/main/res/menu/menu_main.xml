@@ -9,6 +9,6 @@
         android:id="@+id/likedRecipes"
         android:title="Liked recipes" />
     <item
-        android:id="@+id/personalDetails"
-        android:title="Personal Details" />
+        android:id="@+id/logOutUser"
+        android:title="Log out" />
 </menu>

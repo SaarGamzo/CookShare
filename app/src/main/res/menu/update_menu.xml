@@ -3,6 +3,9 @@
         android:id="@+id/mainFeed"
         android:title="Main feed" />
     <item
-        android:id="@+id/personalDetails"
-        android:title="Personal Details" />
+        android:id="@+id/uploadARecipe"
+        android:title="Upload recipe" />
+    <item
+        android:id="@+id/logOutUser"
+        android:title="Log out" />
 </menu>
