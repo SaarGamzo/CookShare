@@ -34,11 +34,16 @@ public class PersonalDetails extends AppCompatActivity {
         setContentView(R.layout.personal_details_activity);
         findViews();
         userEmail = getIntent().getStringExtra("email");
-        textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
-
         // Get the currently logged-in user
         FirebaseUser user = DatabaseUtils.getInstance().getCurrentUser();
+        if(getIntent().getStringExtra("textAcronyms") != null) {
+            textAcronyms.setText(getIntent().getStringExtra("textAcronyms"));
+        }
+
         if (user != null) {
+            if(userEmail == null){
+                userEmail = user.getEmail();
+            }
             userEmail = userEmail.replace(".","!");
             // Query the database to fetch user data
             DatabaseUtils.getInstance().getDatabaseReference().child("Users").child(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {

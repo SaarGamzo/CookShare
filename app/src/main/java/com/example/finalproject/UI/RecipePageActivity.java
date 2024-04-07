@@ -99,7 +99,11 @@ public class RecipePageActivity extends AppCompatActivity {
         textAcronyms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLogoutDialog();
+                Intent uploadRecipeIntent = new Intent(RecipePageActivity.this, PersonalDetails.class);
+                uploadRecipeIntent.putExtra("email", userEmail);
+                uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                startActivity(uploadRecipeIntent);
+                finish();
             }
         });
     }
@@ -163,6 +167,9 @@ public class RecipePageActivity extends AppCompatActivity {
                     uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
                     startActivity(uploadRecipeIntent);
                     finish();
+                    return true;
+                } else if (id == R.id.logOutUser){
+                    showLogoutDialog();
                     return true;
                 }
                 return false;
