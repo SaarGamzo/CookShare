@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,7 +25,6 @@ import com.example.finalproject.Utils.DatabaseUtils;
 import com.example.finalproject.Utils.MyUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +33,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The RecipePageActivity class represents the activity where users can view details of a recipe.
+ * It displays information such as recipe name, cooking time, ingredients, steps, and allows users
+ * to perform actions like updating or deleting the recipe based on their permissions.
+ * The activity includes functionality for fetching recipe details from Firebase Realtime Database,
+ * displaying the details in a user-friendly manner, and providing options for user interactions
+ * such as updating or deleting the recipe.
+ */
 public class RecipePageActivity extends AppCompatActivity {
 
     private TextView recipeHeadline, cookingTime , textAcronyms;
@@ -96,6 +104,10 @@ public class RecipePageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * showLogoutDialog method displays a confirmation dialog for user logout.
+     * It prompts the user to confirm their decision to logout from the application.
+     */
     private void showLogoutDialog() {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle("Logout")
@@ -115,6 +127,10 @@ public class RecipePageActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * logoutUser method performs the logout action for the current user.
+     * It signs out the user from the application and navigates back to the login screen.
+     */
     private void logoutUser() {
         // Perform logout action
         DatabaseUtils.getInstance().signOutUser();
@@ -122,6 +138,10 @@ public class RecipePageActivity extends AppCompatActivity {
         finish(); // Close this activity
     }
 
+    /**
+     * showMenuOptions method displays a popup menu with options for the user.
+     * It shows options like navigating to the main feed or uploading a new recipe.
+     */
     private void showMenuOptions() {
         PopupMenu popupMenu = new PopupMenu(this, menuIcon);
         popupMenu.getMenuInflater().inflate(R.menu.personal_menu, popupMenu.getMenu());
@@ -152,6 +172,7 @@ public class RecipePageActivity extends AppCompatActivity {
     }
 
 
+    // fetch user information to set Acrobyms
     private void fetchUserInformation(String email) {
         DatabaseUtils.getInstance().getDatabaseReference().child("Users").orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -205,6 +226,7 @@ public class RecipePageActivity extends AppCompatActivity {
         removeRecipeIcon = findViewById(R.id.removeRecipeIcon);
     }
 
+    // This function fetch recipe details by recipe name and updates UI accordingly
     private void fetchRecipeDetails(String recipeName) {
         DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -253,6 +275,7 @@ public class RecipePageActivity extends AppCompatActivity {
         });
     }
 
+    // This function shows confirmation dialog of deletion of recipe from firebase database
     private void showDeleteConfirmationDialog(String recipeName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Deletion");
@@ -274,6 +297,7 @@ public class RecipePageActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // This function delete a recipe from the database
     public void deleteRecipe(String recipeName){
         // Remove the recipe from the database
         DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -298,6 +322,7 @@ public class RecipePageActivity extends AppCompatActivity {
     }
 
 
+    // This function updates the table of tags with data
     private void updateTagsTable(ArrayList<String> tags) {
         TableLayout tagsTableLayout = findViewById(R.id.tagsTableLayout);
         int id = 1; // Start ID from 1
@@ -306,14 +331,16 @@ public class RecipePageActivity extends AppCompatActivity {
 
             TextView idTextView = new TextView(this);
             idTextView.setText(String.valueOf(id));
-            idTextView.setTextColor(Color.BLACK); // Set text color to black
-            idTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+            idTextView.setTextColor(Color.BLACK);
+            idTextView.setPadding(8, 0, 8, 0);
+            idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             row.addView(idTextView);
 
             TextView tagTextView = new TextView(this);
             tagTextView.setText(tag);
-            tagTextView.setTextColor(Color.BLACK); // Set text color to black
-            tagTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+            tagTextView.setTextColor(Color.BLACK);
+            tagTextView.setPadding(8, 0, 8, 0);
+            tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             row.addView(tagTextView);
 
             tagsTableLayout.addView(row);
@@ -321,6 +348,7 @@ public class RecipePageActivity extends AppCompatActivity {
         }
     }
 
+    // This function updates the table of steps with data
     private void updateStepsTable(ArrayList<String> steps) {
         TableLayout stepsTableLayout = findViewById(R.id.stepsTableLayout);
         int id = 1;
@@ -329,19 +357,22 @@ public class RecipePageActivity extends AppCompatActivity {
             TableRow row = new TableRow(this);
             TextView idTextView = new TextView(this);
             idTextView.setText(String.valueOf(id));
-            idTextView.setTextColor(Color.BLACK); // Set text color to black
-            idTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+            idTextView.setTextColor(Color.BLACK);
+            idTextView.setPadding(8, 0, 8, 0);
+            idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             row.addView(idTextView);
 
             TextView textView = new TextView(this);
             textView.setText(step);
-            textView.setTextColor(Color.BLACK); // Set text color to black
+            textView.setTextColor(Color.BLACK);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             row.addView(textView);
             stepsTableLayout.addView(row);
             id++;
         }
     }
 
+    // This function updates the ingrredients table with data
     private void updateIngredientsTable(List<String> ingredientsList) {
         TableLayout ingredientsTableLayout = findViewById(R.id.ingredientsTableLayout);
         int id = 1;
@@ -363,31 +394,34 @@ public class RecipePageActivity extends AppCompatActivity {
                     // ID column
                     TextView idTextView = new TextView(this);
                     idTextView.setText(String.valueOf(id));
-                    idTextView.setTextColor(Color.BLACK); // Set text color to black
-                    idTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    idTextView.setTextColor(Color.BLACK);
+                    idTextView.setPadding(8, 0, 8, 0);
+                    idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     row.addView(idTextView);
 
                     // Name column
                     TextView nameTextView = new TextView(this);
                     nameTextView.setText(name);
-                    nameTextView.setTextColor(Color.BLACK); // Set text color to black
-                    nameTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    nameTextView.setTextColor(Color.BLACK);
+                    nameTextView.setPadding(8, 0, 8, 0);
+                    nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     row.addView(nameTextView);
 
                     // Quantity column
                     TextView quantityTextView = new TextView(this);
                     quantityTextView.setText(quantity);
-                    quantityTextView.setTextColor(Color.BLACK); // Set text color to black
-                    quantityTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    quantityTextView.setTextColor(Color.BLACK);
+                    quantityTextView.setPadding(8, 0, 8, 0);
+                    quantityTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     row.addView(quantityTextView);
 
                     // Unit column
                     TextView unitTextView = new TextView(this);
                     unitTextView.setText(unit);
-                    unitTextView.setTextColor(Color.BLACK); // Set text color to black
-                    unitTextView.setPadding(8, 0, 8, 0); // Adjust padding as needed
+                    unitTextView.setTextColor(Color.BLACK);
+                    unitTextView.setPadding(8, 0, 8, 0);
+                    unitTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     row.addView(unitTextView);
-
                     ingredientsTableLayout.addView(row);
                     id++;
                 }
@@ -395,18 +429,9 @@ public class RecipePageActivity extends AppCompatActivity {
         }
     }
 
-    private String getCurrentUserId() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            return currentUser.getUid();
-        } else {
-            // Return a default user ID or handle the situation as needed
-            return "default_user_id";
-        }
-    }
-
+    // This function verify if the logged in user is the one the created this specific recipe
     private boolean verifySelfCreatedRecipe() {
-        String currentUserId = getCurrentUserId();
+        String currentUserId = DatabaseUtils.getInstance().getCurrentUser().getUid(); // logged in user ID
         return createdByUID.equals(currentUserId); // Make sure createdByUID is not null here
     }
 }

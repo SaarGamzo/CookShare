@@ -20,9 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/logoImageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_tenDP"
         android:text="Register"
-        android:textSize="24sp"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
         android:textColor="@android:color/black" />
 
@@ -33,13 +33,13 @@
         android:layout_height="50dp"
         android:layout_below="@id/registerHeadline"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="@dimen/margin_tenDP"
+        android:layout_marginEnd="@dimen/margin_thirtyDP"
         android:hint="Full Name"
         android:textColorHint="@android:color/black"
         android:textColor="@color/black"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium" />
 
     <!-- Button to select Date of Birth -->
     <Button
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/fullNameEditText"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_tenDP"
         android:backgroundTint="@color/lightRed"
         android:text="Select Date of Birth"
         android:textColor="@color/black"/>
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/selectDateOfBirthButton"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_tenDP"
         android:text=""
         android:textColor="@android:color/black" />
 
@@ -74,8 +74,8 @@
         android:hint="Email"
         android:textColorHint="@android:color/black"
         android:textColor="@color/black"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+        android:paddingStart="@dimen/text_size_medium"
+        android:paddingEnd="@dimen/text_size_medium" />
 
     <!-- Input for Password -->
     <EditText
@@ -84,13 +84,13 @@
         android:layout_height="50dp"
         android:layout_below="@id/registerEmailEditText"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/margin_tenDP"
         android:hint="Password"
         android:inputType="textPassword"
         android:textColorHint="@android:color/black"
         android:textColor="@color/black"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+        android:paddingStart="@dimen/text_size_medium"
+        android:paddingEnd="@dimen/text_size_medium" />
 
     <!-- Input to Validate Password -->
     <EditText
@@ -99,14 +99,14 @@
         android:layout_height="50dp"
         android:layout_below="@id/registerPasswordEditText"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginTop="@dimen/margin_tenDP"
+        android:layout_marginEnd="@dimen/margin_thirtyDP"
         android:hint="Confirm Password"
         android:inputType="textPassword"
         android:textColorHint="@android:color/black"
         android:textColor="@color/black"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium" />
 
     <!-- Register Button -->
     <Button
@@ -116,7 +116,7 @@
         android:layout_below="@id/validatePasswordEditText"
         android:layout_marginStart="110dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="@dimen/margin_thirtyDP"
         android:backgroundTint="@color/lightBlue"
         android:text="Register"
         android:gravity="center_horizontal"

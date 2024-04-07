@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="HeadlineTextSize">30dp</string>
-    <string name="NormalTextSize">26dp</string>
-
-
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_headline">20sp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="margin_tenDP">10dp</dimen>
+    <dimen name="margin_thirtyDP">30dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
 </resources>

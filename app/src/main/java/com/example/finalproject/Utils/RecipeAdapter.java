@@ -14,34 +14,48 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.finalproject.Models.Recipe;
 import com.example.finalproject.R;
-import com.example.finalproject.UI.MainFeed;
 import com.example.finalproject.UI.RecipePageActivity;
 import com.google.firebase.database.DatabaseReference;
 
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Adapter class to populate the RecyclerView with recipe data.
+ */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>  {
 
     private Map<String, Recipe> recipeMap; // Map to store recipes
     private Map<String, Boolean> likedRecipeNamesMap; // Map to store liked recipe names
     private DatabaseReference likedRecipesRef; // Firebase reference
-
     private RecipeClickListener recipeClickListener;
 
+    /**
+     * Interface for handling recipe click events.
+     */
     public interface RecipeClickListener {
         void onRecipeClicked(Recipe recipe);
     }
 
+    /**
+     * Setter for recipe click listener.
+     * @param listener RecipeClickListener instance
+     */
     public void setRecipeClickListener(RecipeClickListener listener) {
         this.recipeClickListener = listener;
     }
 
+    /**
+     * Constructor for RecipeAdapter.
+     * @param recipeMap Map containing recipes
+     * @param likedRecipeNamesMap Map containing liked recipe names
+     * @param likedRecipesRef Firebase reference for liked recipes
+     */
     public RecipeAdapter(Map<String, Recipe> recipeMap, Map<String, Boolean> likedRecipeNamesMap, DatabaseReference likedRecipesRef) {
         this.recipeMap = recipeMap;
         this.likedRecipeNamesMap = likedRecipeNamesMap;
         this.likedRecipesRef = likedRecipesRef;
     }
+
 
     @NonNull
     @Override
@@ -57,7 +71,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         boolean isLiked = holder.isRecipeLiked(recipeKey);
         holder.bindRecipe(recipe, isLiked);
         holder.imageRecipe.setOnClickListener(v -> {
-            Log.d("RecipeAdapter", "Clicked on image of recipe, now should navigate to RecipePageActivity with the name:" +recipe.getRecipeName());
             // Create an intent to navigate to RecipePageActivity
             Intent intent = new Intent(v.getContext(), RecipePageActivity.class);
             intent.putExtra("recipeName", recipe.getRecipeName());
@@ -66,7 +79,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         // Click listener for the recipe name text
         holder.textRecipeName.setOnClickListener(v -> {
-            Log.d("RecipeAdapter", "Clicked on image of recipe name, now should navigate to RecipePageActivity with the name:" +recipe.getRecipeName());
             // Create an intent to navigate to RecipePageActivity
             Intent intent = new Intent(v.getContext(), RecipePageActivity.class);
             intent.putExtra("recipeName", recipe.getRecipeName());
@@ -79,6 +91,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return recipeMap.size();
     }
 
+    /**
+     * ViewHolder class for recipes.
+     */
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textRecipeName;
@@ -96,6 +111,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             textPreparationTime = itemView.findViewById(R.id.textPreparationTime);
             imageRecipe = itemView.findViewById(R.id.imageRecipe);
             likeButton = itemView.findViewById(R.id.like_img);
+            // Set click listener for the item view
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,10 +124,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             });
         }
 
+        /**
+         * Bind recipe data to ViewHolder.
+         * @param recipe Recipe object
+         * @param isLiked Flag indicating if recipe is liked
+         */
         public void bindRecipe(Recipe recipe, boolean isLiked) {
             textRecipeName.setText(recipe.getRecipeName());
-            textSteps.setText("Steps: " + recipe.getSteps().size()); // Example, replace with actual steps count
-            textIngredients.setText("Ingredients: " + recipe.getIngredients().size()); // Example, replace with actual ingredients count
+            textSteps.setText("Steps: " + recipe.getSteps().size());
+            textIngredients.setText("Ingredients: " + recipe.getIngredients().size());
             textPreparationTime.setText("Cooking Time: " + recipe.getCookingTimeMinutes() + " min");
             // Load recipe image using Glide
             Glide.with(itemView.getContext())
@@ -133,10 +154,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             });
         }
 
+        /**
+         * Check if recipe is liked.
+         * @param recipeKey Key of the recipe
+         * @return True if recipe is liked, false otherwise
+         */
         private boolean isRecipeLiked(String recipeKey) {
             return likedRecipeNamesMap != null && likedRecipeNamesMap.containsKey(recipeKey) && likedRecipeNamesMap.get(recipeKey);
         }
 
+        /**
+         * Toggle like status for a recipe.
+         * @param recipe Recipe object
+         */
         private void toggleLike(Recipe recipe) {
             String recipeName = recipe.getRecipeName();
             boolean isRecipeLiked = isRecipeLiked(recipeName);

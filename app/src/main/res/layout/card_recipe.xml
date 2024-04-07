@@ -4,9 +4,9 @@
     android:id="@+id/cardViewRecipe"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
+    android:layout_marginStart="@dimen/padding_medium"
+    android:layout_margin="@dimen/padding_small"
+    app:cardCornerRadius="@dimen/padding_small"
     app:cardElevation="4dp"
     android:outlineAmbientShadowColor="@color/black"
     app:cardBackgroundColor="@color/bez">
@@ -21,9 +21,9 @@
             android:id="@+id/textRecipeName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_small"
             android:text="Recipe Name"
             android:textSize="18sp"
             android:textColor="@color/black"
@@ -35,8 +35,8 @@
             android:id="@+id/imageRecipe"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
         android:scaleType="fitXY"
         android:src="@drawable/ic_launcher_background" />
 
@@ -45,10 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_medium"
+            android:layout_marginTop="@dimen/padding_small"
+            android:layout_marginBottom="@dimen/padding_small">
 
             <!-- Steps -->
             <LinearLayout
@@ -63,7 +63,7 @@
                     android:layout_height="40dp"
                     android:src="@drawable/steps"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="@dimen/padding_small" />
 
                 <TextView
                     android:id="@+id/textSteps"
@@ -73,7 +73,7 @@
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="10 Steps"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -91,7 +91,7 @@
                     android:layout_height="40dp"
                     android:src="@drawable/carrot"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="@dimen/padding_small" />
 
                 <TextView
                     android:id="@+id/textIngredients"
@@ -101,7 +101,7 @@
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="8 Ingredients"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -119,7 +119,7 @@
                     android:layout_height="40dp"
                     android:src="@drawable/clock"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="@dimen/padding_small" />
 
                 <TextView
                     android:id="@+id/textPreparationTime"
@@ -129,14 +129,14 @@
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="30 min"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_medium"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/like_img"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/margin_thirtyDP"
+                    android:layout_height="@dimen/margin_thirtyDP"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="6dp"

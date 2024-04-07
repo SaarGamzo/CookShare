@@ -126,7 +126,7 @@
                 <TableLayout
                     android:id="@+id/tagsTableLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:background="@drawable/table_outline"
@@ -139,7 +139,7 @@
                             android:layout_height="wrap_content"
                             android:text="ID"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:padding="10dp"
                             android:textStyle="bold" />
 
@@ -149,7 +149,7 @@
                             android:text="Tag"
                             android:padding="10dp"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
                     </TableRow>
                 </TableLayout>
@@ -191,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:text="ID"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:padding="10dp"
                             android:textStyle="bold" />
 
@@ -200,7 +200,7 @@
                             android:layout_height="wrap_content"
                             android:text="Name"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:padding="10dp"
                             android:textStyle="bold" />
 
@@ -218,7 +218,7 @@
                             android:layout_height="wrap_content"
                             android:text="Unit"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:padding="10dp"
                             android:textStyle="bold" />
                     </TableRow>
@@ -261,7 +261,7 @@
                             android:layout_height="wrap_content"
                             android:text="ID"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:padding="10dp"
                             android:textStyle="bold" />
 
@@ -270,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:text="Step"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
+                            android:textSize="22sp"
                             android:padding="10dp"
                             android:textStyle="bold" />
                     </TableRow>
@@ -298,7 +298,7 @@
                 android:layout_below="@id/cookingTimeHeadline"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="the cooking time"
+                android:text="Average cooking time"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
