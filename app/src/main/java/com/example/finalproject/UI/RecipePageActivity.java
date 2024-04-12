@@ -2,7 +2,9 @@ package com.example.finalproject.UI;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -43,8 +45,8 @@ import java.util.List;
  */
 public class RecipePageActivity extends AppCompatActivity {
 
-    private TextView recipeHeadline, cookingTime , textAcronyms;
-    private ImageView recipeImage, updateRecipeIcon, removeRecipeIcon;
+    private TextView recipeHeadline, cookingTime , textAcronyms, tagsContent;
+    private ImageView recipeImage, updateRecipeIcon, removeRecipeIcon, youtubeImage;
     private String userEmail;
     private String createdByUID;
     private ImageView menuIcon;
@@ -95,6 +97,13 @@ public class RecipePageActivity extends AppCompatActivity {
             }
         });
 
+        youtubeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchOnYouTube(recipeName);
+            }
+        });
+
         // Set OnClickListener for Acronyms TextView
         textAcronyms.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +116,14 @@ public class RecipePageActivity extends AppCompatActivity {
             }
         });
     }
+
+    // function to search on youtube a similar recipe in case the steps are not fully understood.
+    private void searchOnYouTube(String recipeName) {
+        String searchQuery = "How to make " + recipeName + "?";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=" + Uri.encode(searchQuery)));
+        startActivity(intent);
+    }
+
 
     /**
      * showLogoutDialog method displays a confirmation dialog for user logout.
@@ -231,6 +248,9 @@ public class RecipePageActivity extends AppCompatActivity {
         textAcronyms = findViewById(R.id.textAcronyms);
         updateRecipeIcon = findViewById(R.id.updateRecipeIcon);
         removeRecipeIcon = findViewById(R.id.removeRecipeIcon);
+
+        tagsContent = findViewById(R.id.tagsContent);
+        youtubeImage = findViewById(R.id.youtubeImage);
     }
 
     // This function fetch recipe details by recipe name and updates UI accordingly
@@ -261,16 +281,16 @@ public class RecipePageActivity extends AppCompatActivity {
 
                     // Set the retrieved data to TextViews and ImageView
                     recipeHeadline.setText(recipeName);
-                    updateTagsTable(recipeTags);
+                    updateTagsTextview(recipeTags);
                     updateStepsTable(recipeSteps);
-                    cookingTime.setText(recipeCookingTime);
+                    cookingTime.setText(recipeCookingTime + " Minutes");
                     // Set ingredients as a single string
                     updateIngredientsTable(ingredientsList);
                     // Load the recipe image using the provided URL
                     Glide.with(RecipePageActivity.this)
                             .load(imageUrl)
-                            .placeholder(R.drawable.carrot)  // Placeholder image while loading
-                            .error(R.drawable.carrot)  // Error image if unable to load
+                            .placeholder(R.drawable.imagenotfound)
+                            .error(R.drawable.imagenotfound)
                             .into(recipeImage);
                 }
             }
@@ -329,30 +349,16 @@ public class RecipePageActivity extends AppCompatActivity {
     }
 
 
-    // This function updates the table of tags with data
-    private void updateTagsTable(ArrayList<String> tags) {
-        TableLayout tagsTableLayout = findViewById(R.id.tagsTableLayout);
-        int id = 1; // Start ID from 1
+    // This function updates the text view of tags with data
+    private void updateTagsTextview(ArrayList<String> tags) {
+        StringBuilder st = new StringBuilder();
         for (String tag : tags) {
-            TableRow row = new TableRow(this);
-
-            TextView idTextView = new TextView(this);
-            idTextView.setText(String.valueOf(id));
-            idTextView.setTextColor(Color.BLACK);
-            idTextView.setPadding(8, 0, 8, 0);
-            idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            row.addView(idTextView);
-
-            TextView tagTextView = new TextView(this);
-            tagTextView.setText(tag);
-            tagTextView.setTextColor(Color.BLACK);
-            tagTextView.setPadding(8, 0, 8, 0);
-            tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            row.addView(tagTextView);
-
-            tagsTableLayout.addView(row);
-            id++; // Increment ID for the next row
+            st.append("#" + tag + ", ");
         }
+        if (st.length() > 0) {
+            st.deleteCharAt(st.length() - 2); // Remove the last comma and space
+        }
+        tagsContent.setText(st);
     }
 
     // This function updates the table of steps with data
@@ -440,5 +446,15 @@ public class RecipePageActivity extends AppCompatActivity {
     private boolean verifySelfCreatedRecipe() {
         String currentUserId = DatabaseUtils.getInstance().getCurrentUser().getUid(); // logged in user ID
         return createdByUID.equals(currentUserId); // Make sure createdByUID is not null here
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed(); // Call the superclass method for default back button behavior (optional)
+        Intent mainIntent = new Intent(RecipePageActivity.this, MainFeed.class);
+        mainIntent.putExtra("email", userEmail);
+        mainIntent.putExtra("textAcronyms", textAcronyms.getText());
+        startActivity(mainIntent);
+        finish();
     }
 }

@@ -234,7 +234,7 @@ public class UploadRecipe extends AppCompatActivity {
                 || !areStepsAdded() || !isImageUploaded() || !isCookingTimeSelected() || !validateStepsNotEmpty(steps)
                 || validateIngredientsNotEmpty(ingredients)) {
             // Show a toast indicating missing inputs
-            myUtils.showToast("Please fill in all required fields.");
+            myUtils.showToast("Please verify the recipe details.");
         } else {
             // All inputs are provided, add the recipe to the Firebase database
             addRecipeToDatabase();
@@ -470,6 +470,13 @@ public class UploadRecipe extends AppCompatActivity {
     private void addIngredientField() {
         // TextView for ingredient label
         TextView label = new TextView(this);
+        // Set margin for the label
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        labelParams.setMargins(0, 150, 0, 16); // Left, top, right, bottom margins
+        label.setLayoutParams(labelParams);
         label.setText("Ingredient #" + ingredientCounter++);
         label.setTextColor(getResources().getColor(android.R.color.black));
         label.setTextSize(20); // Adjust font size as needed
@@ -481,9 +488,12 @@ public class UploadRecipe extends AppCompatActivity {
         ingredientNameEditText.setId(ingredientsIDCounter);
         ingredientEditTextIds.add(ingredientsIDCounter);
         ingredientsIDCounter++;
-        ingredientNameEditText.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams nameEditTextParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        nameEditTextParams.setMargins(0, 0, 0, 16); // Left, top, right, bottom margins
+        ingredientNameEditText.setLayoutParams(nameEditTextParams);
         ingredientNameEditText.setHint("Enter ingredient name");
         ingredientNameEditText.setHintTextColor(getResources().getColor(android.R.color.black));
         ingredientNameEditText.setTextColor(-16777216);
@@ -494,9 +504,12 @@ public class UploadRecipe extends AppCompatActivity {
         ingredientQuantityEditText.setId(ingredientsIDCounter);
         ingredientEditTextIds.add(ingredientsIDCounter);
         ingredientsIDCounter++;
-        ingredientQuantityEditText.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams quantityEditTextParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        quantityEditTextParams.setMargins(0, 0, 0, 16); // Left, top, right, bottom margins
+        ingredientQuantityEditText.setLayoutParams(quantityEditTextParams);
         ingredientQuantityEditText.setHint("Enter quantity");
         ingredientQuantityEditText.setTextColor(-16777216);
         ingredientQuantityEditText.setHintTextColor(getResources().getColor(android.R.color.black));
@@ -508,6 +521,12 @@ public class UploadRecipe extends AppCompatActivity {
         unitSpinner.setId(ingredientsIDCounter);
         ingredientEditTextIds.add(ingredientsIDCounter);
         ingredientsIDCounter++;
+        LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        spinnerParams.setMargins(0, 0, 0, 16); // Left, top, right, bottom margins
+        unitSpinner.setLayoutParams(spinnerParams);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.units_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -528,18 +547,17 @@ public class UploadRecipe extends AppCompatActivity {
         });
         ingredientsLayout.addView(unitSpinner);
 
-
         // Button to remove the ingredient field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove Ingredient");
-
-        // Set the background drawable programmatically
+        removeButton.setText("Remove Ingredient #" + (ingredientCounter-1));
         removeButton.setBackgroundResource(R.drawable.red_button_bg);
-
-        // Set text color to black
         removeButton.setTextColor(Color.BLACK);
-
-
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        buttonParams.setMargins(0, 0, 0, 16); // Left, top, right, bottom margins
+        removeButton.setLayoutParams(buttonParams);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -561,9 +579,19 @@ public class UploadRecipe extends AppCompatActivity {
     }
 
 
+
+
+
     private void addStepField() {
         // TextView for step label
         TextView label = new TextView(this);
+        // Set margin for the label
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        labelParams.setMargins(0, 150, 0, 16); // Left, top, right, bottom margins
+        label.setLayoutParams(labelParams);
         label.setText("Step #" + stepCounter++);
         label.setTextColor(getResources().getColor(android.R.color.black));
         label.setTextSize(20); // Adjust font size as needed
@@ -572,11 +600,13 @@ public class UploadRecipe extends AppCompatActivity {
 
         // EditText for step description
         EditText stepEditText = new EditText(this);
-        String stepEditTextId = "StepNum" + stepCounter;
         stepEditText.setId(stepsIDCounter);
-        stepEditText.setLayoutParams(new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams stepEditTextParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        stepEditTextParams.setMargins(0, 0, 0, 16); // Left, top, right, bottom margins
+        stepEditText.setLayoutParams(stepEditTextParams);
         stepEditText.setHint("Enter step");
         stepEditText.setHintTextColor(-16777216);
         stepEditText.setTextColor(-16777216);
@@ -588,11 +618,15 @@ public class UploadRecipe extends AppCompatActivity {
 
         // Button to remove the step field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove Step");
+        removeButton.setText("Remove Step #" + (stepCounter - 1));
         removeButton.setBackgroundResource(R.drawable.red_button_bg);
-
-        // Set text color to black
         removeButton.setTextColor(Color.BLACK);
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        buttonParams.setMargins(0, 0, 0, 16); // Left, top, right, bottom margins
+        removeButton.setLayoutParams(buttonParams);
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -608,7 +642,6 @@ public class UploadRecipe extends AppCompatActivity {
         });
         stepsLayout.addView(removeButton);
     }
-
 
     private void findViews() {
         headlineTextView = findViewById(R.id.headlineTextView);
@@ -648,6 +681,16 @@ public class UploadRecipe extends AppCompatActivity {
             });
             tagsChipGroup.addView(chip);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed(); // Call the superclass method for default back button behavior (optional)
+        Intent mainIntent = new Intent(UploadRecipe.this, MainFeed.class);
+        mainIntent.putExtra("email", userEmail);
+        mainIntent.putExtra("textAcronyms", textAcronyms.getText());
+        startActivity(mainIntent);
+        finish();
     }
 
 

@@ -117,8 +117,10 @@
         android:layout_marginStart="110dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="@dimen/margin_thirtyDP"
-        android:backgroundTint="@color/lightBlue"
-        android:text="Register"
+        android:backgroundTint="@color/lightRed"
+        android:text="Register!"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:gravity="center_horizontal"
         android:textColor="@color/black"
         />

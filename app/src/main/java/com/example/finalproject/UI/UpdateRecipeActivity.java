@@ -553,6 +553,12 @@ public class UpdateRecipeActivity extends AppCompatActivity {
     private void addIngredientField() {
         // TextView for ingredient label
         TextView label = new TextView(this);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        labelParams.setMargins(0, 150, 0, 16); // Set bottom margin to 16dp
+        label.setLayoutParams(labelParams);
         label.setText("Ingredient #" + ingredientCounter++);
         label.setTextColor(getResources().getColor(android.R.color.black));
         label.setTextSize(20); // Adjust font size as needed
@@ -613,7 +619,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the ingredient field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove Ingredient");
+        removeButton.setText("Remove Ingredient #" + (ingredientCounter-1));
         removeButton.setBackgroundResource(R.drawable.red_button_bg);
 
         // Set text color to black
@@ -641,6 +647,12 @@ public class UpdateRecipeActivity extends AppCompatActivity {
     private void addIngredientField(String name, String quantity, String unit) {
         // TextView for ingredient label
         TextView label = new TextView(this);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        labelParams.setMargins(0, 150, 0, 16); // Set bottom margin to 16dp
+        label.setLayoutParams(labelParams);
         label.setText("Ingredient #" + ingredientCounter++);
         label.setTextColor(getResources().getColor(android.R.color.black));
         label.setTextSize(20); // Adjust font size as needed
@@ -704,7 +716,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the ingredient field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove Ingredient");
+        removeButton.setText("Remove Ingredient #" + (ingredientCounter-1));
         removeButton.setBackgroundResource(R.drawable.red_button_bg);
 
         // Set text color to black
@@ -733,6 +745,12 @@ public class UpdateRecipeActivity extends AppCompatActivity {
     private void addStepField() {
         // TextView for step label
         TextView label = new TextView(this);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        labelParams.setMargins(0, 150, 0, 16); // Set bottom margin to 16dp
+        label.setLayoutParams(labelParams);
         label.setText("Step #" + stepCounter++);
         label.setTextColor(getResources().getColor(android.R.color.black));
         label.setTextSize(20); // Adjust font size as needed
@@ -757,7 +775,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the step field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove Step");
+        removeButton.setText("Remove Step #" + (stepCounter-1));
         removeButton.setBackgroundResource(R.drawable.red_button_bg);
 
         // Set text color to black
@@ -781,6 +799,12 @@ public class UpdateRecipeActivity extends AppCompatActivity {
     private void addStepField(String existingStep) {
         // TextView for step label
         TextView label = new TextView(this);
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        labelParams.setMargins(0, 150, 0, 16); // Set bottom margin to 16dp
+        label.setLayoutParams(labelParams);
         label.setText("Step #" + stepCounter++);
         label.setTextColor(getResources().getColor(android.R.color.black));
         label.setTextSize(20); // Adjust font size as needed
@@ -806,7 +830,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
         // Button to remove the step field
         Button removeButton = new Button(this);
-        removeButton.setText("Remove Step");
+        removeButton.setText("Remove Step #" + (stepCounter-1));
         removeButton.setBackgroundResource(R.drawable.red_button_bg);
 
         // Set text color to black
@@ -864,6 +888,16 @@ public class UpdateRecipeActivity extends AppCompatActivity {
             });
             tagsChipGroup.addView(chip);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed(); // Call the superclass method for default back button behavior (optional)
+        Intent mainIntent = new Intent(UpdateRecipeActivity.this, MainFeed.class);
+        mainIntent.putExtra("email", userEmail);
+        mainIntent.putExtra("textAcronyms", textAcronyms.getText());
+        startActivity(mainIntent);
+        finish();
     }
 
 

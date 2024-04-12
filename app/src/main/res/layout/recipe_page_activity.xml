@@ -100,74 +100,64 @@
                 android:layout_width="350dp"
                 android:layout_height="250dp"
                 android:layout_below="@id/recipeHeadline"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/carrot" />
+                android:layout_centerHorizontal="true"/>
 
-            <!-- Tags -->
             <TextView
-                android:id="@+id/tagsHeadline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/recipeImage"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Tags:"
-                android:textColor="@android:color/black"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-
-            <!-- Tags Table -->
-            <RelativeLayout
-                android:id="@+id/relativeLayoutTags"
+                android:id="@+id/firstLine"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/tagsHeadline">
-
-                <TableLayout
-                    android:id="@+id/tagsTableLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:background="@drawable/table_outline"
-                    android:padding="16dp">
-
-                    <!-- Table headers for Tags -->
-                    <TableRow>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="ID"
-                            android:textColor="@color/black"
-                            android:textSize="24sp"
-                            android:padding="10dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Tag"
-                            android:padding="10dp"
-                            android:textColor="@color/black"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
-                    </TableRow>
-                </TableLayout>
-            </RelativeLayout>
-
+                android:layout_below="@id/recipeImage"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="___________________________"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
 
             <!-- Ingredients -->
             <TextView
                 android:id="@+id/ingredientsHeadline"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relativeLayoutTags"
-                android:layout_marginTop="8dp"
+                android:layout_below="@id/firstLine"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="Ingredients:"
+                android:text="INGREDIENTS"
                 android:textColor="@android:color/black"
-                android:textSize="26sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/carrotImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/firstLine"
+                android:layout_toRightOf="@id/ingredientsHeadline"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/carrot"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/saltPepperImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/firstLine"
+                android:layout_toRightOf="@id/carrotImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/salt_and_pepper"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/saucesImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/firstLine"
+                android:layout_toRightOf="@id/saltPepperImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/sauces"
+                android:layout_marginStart="10dp"/>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutIngredients"
@@ -179,6 +169,7 @@
                     android:id="@+id/ingredientsTableLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:background="@drawable/table_outline"
@@ -189,7 +180,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ID"
+                            android:text="#"
                             android:textColor="@color/black"
                             android:textSize="24sp"
                             android:padding="10dp"
@@ -225,19 +216,87 @@
                 </TableLayout>
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/secondLine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/relativeLayoutIngredients"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="___________________________"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+
 
             <!-- Steps -->
             <TextView
                 android:id="@+id/stepssHeadline"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relativeLayoutIngredients"
-                android:layout_marginTop="8dp"
+                android:layout_below="@id/secondLine"
+                android:layout_marginTop="30dp"
                 android:gravity="center"
-                android:text="Steps:"
+                android:text="STEPS"
                 android:textColor="@android:color/black"
-                android:textSize="26sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/wokImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/secondLine"
+                android:layout_toRightOf="@id/stepssHeadline"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/wok"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/hotPotImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/secondLine"
+                android:layout_toRightOf="@id/wokImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/hot_pot"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/ovenImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/secondLine"
+                android:layout_toRightOf="@id/hotPotImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/oven"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/prepareImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/secondLine"
+                android:layout_toRightOf="@id/ovenImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/prepare"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/mixerImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/secondLine"
+                android:layout_toRightOf="@id/prepareImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/mixer"
+                android:layout_marginStart="10dp"/>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutSteps"
@@ -252,6 +311,7 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:background="@drawable/table_outline"
+                    android:layout_marginTop="10dp"
                     android:padding="16dp">
 
                     <!-- Table headers for Steps -->
@@ -259,7 +319,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ID"
+                            android:text="#"
                             android:textColor="@color/black"
                             android:textSize="24sp"
                             android:padding="10dp"
@@ -277,19 +337,63 @@
                 </TableLayout>
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/thirdLine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/relativeLayoutSteps"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="___________________________"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
 
             <!-- Cooking time -->
             <TextView
                 android:id="@+id/cookingTimeHeadline"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relativeLayoutSteps"
-                android:layout_marginTop="8dp"
+                android:layout_below="@id/thirdLine"
+                android:layout_marginTop="30dp"
                 android:gravity="center"
-                android:text="Cooking time:"
+                android:text="COOKING TIME"
                 android:textColor="@android:color/black"
-                android:textSize="26sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/cookingTimeImg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/thirdLine"
+                android:layout_toRightOf="@+id/cookingTimeHeadline"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/clock" />
+
+            <ImageView
+                android:id="@+id/serveImg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/thirdLine"
+                android:layout_toRightOf="@+id/cookingTimeImg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/serve" />
+
+            <ImageView
+                android:id="@+id/plateImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/thirdLine"
+                android:layout_toRightOf="@+id/serveImg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/plate" />
 
             <TextView
                 android:id="@+id/cookingTime"
@@ -298,20 +402,136 @@
                 android:layout_below="@id/cookingTimeHeadline"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Average cooking time"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/cookingTimeImg"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_below="@id/cookingTime"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/clock" />
 
+            <TextView
+                android:id="@+id/fourthLine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/cookingTime"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="___________________________"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+            <!-- Tags -->
+            <TextView
+                android:id="@+id/tagsHeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fourthLine"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="TAGS"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/burgerImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/fourthLine"
+                android:layout_toRightOf="@id/tagsHeadline"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/burger"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/saladImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/fourthLine"
+                android:layout_toRightOf="@id/burgerImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/salad"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/sushiImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/fourthLine"
+                android:layout_toRightOf="@id/saladImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/sushi"
+                android:layout_marginStart="10dp"/>
+            <ImageView
+                android:id="@+id/pizzaImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/fourthLine"
+                android:layout_toRightOf="@id/sushiImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/pizza"
+                android:layout_marginStart="10dp"/>
+
+            <ImageView
+                android:id="@+id/soupImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/fourthLine"
+                android:layout_toRightOf="@id/pizzaImage"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/soup"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/tagsContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tagsHeadline"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="tagging..."
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/fifthline"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tagsContent"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="___________________________"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/youtubeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/fifthline"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Don't know what to do? Check on Youtube!"
+                android:textColor="@android:color/black"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/youtubeImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/youtubeTextView"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/youtube"
+                android:layout_marginStart="10dp"
+                android:onClick="onYouTubeButtonClick"/>
         </RelativeLayout>
 
     </ScrollView>

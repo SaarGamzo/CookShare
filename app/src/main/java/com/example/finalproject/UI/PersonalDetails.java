@@ -146,4 +146,14 @@ public class PersonalDetails extends AppCompatActivity {
         dateOfBirthTextView = findViewById(R.id.DOBTextView);
         emailTextView = findViewById(R.id.emailTextView);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed(); // Call the superclass method for default back button behavior (optional)
+        Intent mainIntent = new Intent(PersonalDetails.this, MainFeed.class);
+        mainIntent.putExtra("email", userEmail);
+        mainIntent.putExtra("textAcronyms", textAcronyms.getText());
+        startActivity(mainIntent);
+        finish();
+    }
 }

@@ -105,7 +105,6 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
                 uploadRecipeIntent.putExtra("email", userEmail);
                 uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
                 startActivity(uploadRecipeIntent);
-                finish();
             }
         });
 

@@ -63,34 +63,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upload a recipe!"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"/>
 
-        <TextView
-            android:id="@+id/recipeName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enter recipe name"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_below="@id/headlineTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
-
-        <!-- Input field for recipe name -->
         <EditText
             android:id="@+id/recipeNameEditText"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Recipe Name"
+            android:hint="Enter recipe Name..."
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:textColorHint="@android:color/black"
             android:textColor="@color/black"
-            android:layout_below="@id/recipeName"
+            android:layout_below="@id/headlineTextView"
             android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:id="@+id/firstLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/recipeNameEditText"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="___________________________"
+            android:textColor="@android:color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/headlineTags"
@@ -100,7 +101,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_below="@id/recipeNameEditText"
+            android:layout_below="@id/firstLine"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"/>
 
@@ -112,13 +113,25 @@
             android:layout_marginTop="16dp"
             android:background="@color/bez" />
 
+        <TextView
+            android:id="@+id/secondLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tagsChipGroup"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="___________________________"
+            android:textColor="@android:color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
+
         <!-- Dynamic section for ingredients -->
         <LinearLayout
             android:id="@+id/ingredientsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/tagsChipGroup"
+            android:layout_below="@id/secondLine"
             android:layout_marginTop="16dp"/>
 
         <!-- Button to add new ingredient -->
@@ -127,9 +140,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Ingredient"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/ingredientsLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/thirdLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/addIngredientButton"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="___________________________"
+            android:textColor="@android:color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
 
         <!-- Dynamic section for steps -->
         <LinearLayout
@@ -137,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/addIngredientButton"
+            android:layout_below="@id/thirdLine"
             android:layout_marginTop="16dp"/>
 
         <!-- Button to add new step -->
@@ -146,15 +175,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Step"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/stepsLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/fourthLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/addStepButton"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="___________________________"
+            android:textColor="@android:color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/selectedImageView"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:layout_below="@id/addStepButton"
+            android:layout_below="@id/fourthLine"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:scaleType="fitXY"
@@ -166,9 +211,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upload Image"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/selectedImageView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:id="@+id/fifthLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/uploadImageButton"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="___________________________"
+            android:textColor="@android:color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
 
         <!-- Text label for average cooking time -->
         <TextView
@@ -176,9 +237,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Average Cooking Time (minutes):"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/black"
-            android:layout_below="@id/uploadImageButton"
+            android:layout_below="@id/fifthLine"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"
             android:layout_marginTop="24dp"/>
@@ -201,7 +262,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Selected Cooking Time: 10 minutes"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/black"
             android:layout_below="@id/cookingTimeSeekBar"
             android:layout_centerHorizontal="true"
@@ -214,6 +275,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upload A Recipe!"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/selectedCookingTimeText"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"/>

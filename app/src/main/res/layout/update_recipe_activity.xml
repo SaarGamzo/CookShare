@@ -117,6 +117,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Ingredient"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/ingredientsLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"/>
@@ -136,6 +140,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add Step"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/stepsLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"/>
@@ -156,6 +164,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upload Image"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/selectedImageView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"/>
@@ -204,6 +216,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update A Recipe!"
+            android:backgroundTint="@color/lightRed"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:layout_below="@id/selectedCookingTimeText"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"/>
