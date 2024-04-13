@@ -1,5 +1,3 @@
-
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,12 +11,11 @@
 
         <!-- Upper Toolbar -->
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/appBarLayout"
             android:background="@android:color/transparent"
-            android:elevation="0dp"
-            >
+            android:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -35,14 +32,14 @@
                         android:id="@+id/textAcronyms"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textSize="18sp"
-                        android:textColor="@android:color/black"
-                        android:background="@drawable/circle_outline"
-                        android:textStyle="bold"
-                        android:padding="8dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp" />
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/circle_outline"
+                        android:padding="8dp"
+                        android:text=""
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- Menu Icon (Right) -->
@@ -50,12 +47,11 @@
                     android:id="@+id/menuIcon"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/menu"
+                    android:layout_gravity="end"
                     android:padding="8dp"
-                    android:layout_gravity="end" />
+                    android:src="@drawable/menu" />
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
-
 
 
         <!-- Headline "Upload a recipe!" at the center -->
@@ -63,36 +59,36 @@
             android:id="@+id/headlineTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Update a recipe!"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:text="Update a recipe!"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/recipeNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="recipe name"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:layout_below="@id/headlineTextView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:text="recipe name"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/headlineTags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Choose tags:"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
             android:layout_below="@id/recipeNameTextView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:text="Choose tags:"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/tagsChipGroup"
@@ -107,46 +103,46 @@
             android:id="@+id/ingredientsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_below="@id/tagsChipGroup"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:orientation="vertical" />
 
         <!-- Button to add new ingredient -->
         <Button
             android:id="@+id/addIngredientButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Ingredient"
-            android:backgroundTint="@color/lightRed"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:layout_below="@id/ingredientsLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/lightRed"
+            android:text="Add Ingredient"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <!-- Dynamic section for steps -->
         <LinearLayout
             android:id="@+id/stepsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_below="@id/addIngredientButton"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:orientation="vertical" />
 
         <!-- Button to add new step -->
         <Button
             android:id="@+id/addStepButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Step"
-            android:backgroundTint="@color/lightRed"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:layout_below="@id/stepsLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/lightRed"
+            android:text="Add Step"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/selectedImageView"
@@ -163,27 +159,27 @@
             android:id="@+id/uploadImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload Image"
-            android:backgroundTint="@color/lightRed"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:layout_below="@id/selectedImageView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/lightRed"
+            android:text="Upload Image"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <!-- Text label for average cooking time -->
         <TextView
             android:id="@+id/cookingTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Average Cooking Time (minutes):"
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:layout_below="@id/uploadImageButton"
             android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp"
+            android:text="Average Cooking Time (minutes):"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <!-- Scrollbar for selecting cooking time -->
         <SeekBar
@@ -192,37 +188,37 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/cookingTimeLabel"
             android:layout_marginTop="8dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:max="500"
-            android:min="10" />
+            android:min="10"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
 
         <!-- Display the selected cooking time -->
         <TextView
             android:id="@+id/selectedCookingTimeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selected Cooking Time: 10 minutes"
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:layout_below="@id/cookingTimeSeekBar"
             android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:text="Selected Cooking Time: 10 minutes"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <!-- Button to upload the recipe -->
         <Button
             android:id="@+id/updateRecipeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Update A Recipe!"
-            android:backgroundTint="@color/lightRed"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:layout_below="@id/selectedCookingTimeText"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/lightRed"
+            android:text="Update A Recipe!"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </ScrollView>

@@ -172,7 +172,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
                     // update values:
                     cookingTimeSeekBar.setProgress(recipeCookingTime);
-                    recipeNameTextView.setText(recipeName);
+                    recipeNameTextView.setText("Recipe name: " + recipeName);
                     for (String tag : recipeTags) {
                         for (int chipId : chipsIds) {
                             Chip chip = findViewById(chipId);

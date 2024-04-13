@@ -46,7 +46,7 @@ import java.util.List;
 public class RecipePageActivity extends AppCompatActivity {
 
     private TextView recipeHeadline, cookingTime , textAcronyms, tagsContent;
-    private ImageView recipeImage, updateRecipeIcon, removeRecipeIcon, youtubeImage;
+    private ImageView recipeImage, updateRecipeIcon, removeRecipeIcon, youtubeImage ,googleImage;
     private String userEmail;
     private String createdByUID;
     private ImageView menuIcon;
@@ -104,6 +104,13 @@ public class RecipePageActivity extends AppCompatActivity {
             }
         });
 
+        googleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchOnGoogle(recipeName);
+            }
+        });
+
         // Set OnClickListener for Acronyms TextView
         textAcronyms.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +122,13 @@ public class RecipePageActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void searchOnGoogle(String recipeName) {
+        String query = "How to make " + recipeName +"?";
+        String searchQuery = "https://www.google.com/search?q=" + Uri.encode(query);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchQuery));
+        startActivity(intent);
     }
 
     // function to search on youtube a similar recipe in case the steps are not fully understood.
@@ -251,6 +265,7 @@ public class RecipePageActivity extends AppCompatActivity {
 
         tagsContent = findViewById(R.id.tagsContent);
         youtubeImage = findViewById(R.id.youtubeImage);
+        googleImage = findViewById(R.id.googleImage);
     }
 
     // This function fetch recipe details by recipe name and updates UI accordingly

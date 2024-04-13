@@ -71,6 +71,9 @@ public class MainFeed extends AppCompatActivity implements RecipeAdapter.RecipeC
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey("email")) {
             userEmail = extras.getString("email");
+            if(userEmail == null){
+                userEmail = DatabaseUtils.getInstance().getCurrentUser().getEmail();
+            }
             // Fetch user information from Firebase Database
             userEmail = userEmail.replace("!", ".");
             fetchUserInformation(userEmail);

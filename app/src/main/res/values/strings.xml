@@ -10,5 +10,6 @@
         <item>gram</item>
         <item>glass</item>
         <item>kilogram</item>
+        <item>oz</item>
     </string-array>
 </resources>
