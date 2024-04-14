@@ -230,15 +230,23 @@ public class UploadRecipe extends AppCompatActivity {
         // Check if all required inputs are provided
         List<Ingredient> ingredients = getIngredients();
         List<String> steps = getSteps();
-        if (!isRecipeNameValid() || !areTagsSelected() || !areIngredientsAdded()
-                || !areStepsAdded() || !isImageUploaded() || !isCookingTimeSelected() || !validateStepsNotEmpty(steps)
-                || validateIngredientsNotEmpty(ingredients)) {
-            // Show a toast indicating missing inputs
-            myUtils.showToast("Please verify the recipe details.");
+        if (isRecipeNameEmpty()) {
+            myUtils.showToast("Please enter a valid recipe name.");
+        } else if (!areTagsSelected()) {
+            myUtils.showToast("Please select at least one tag.");
+        } else if (!areIngredientsAdded() || !validateIngredientsNotEmpty(ingredients)) {
+            myUtils.showToast("Please add at least one ingredient.");
+        } else if (!areStepsAdded() || !validateStepsNotEmpty(steps)) {
+            myUtils.showToast("Please add at least one step.");
+        } else if (!isImageUploaded()) {
+            myUtils.showToast("Please upload an image for the recipe.");
+        } else if (!isCookingTimeSelected()) {
+            myUtils.showToast("Please select the cooking time.");
         } else {
             // All inputs are provided, add the recipe to the Firebase database
             addRecipeToDatabase();
         }
+
     }
 
     private boolean validateStepsNotEmpty(List<String> steps) {
@@ -413,9 +421,9 @@ public class UploadRecipe extends AppCompatActivity {
     }
 
 
-    private boolean isRecipeNameValid() {
-        String recipeName = recipeNameEditText.getText().toString().trim();
-        return !recipeName.isEmpty();
+    private boolean isRecipeNameEmpty() {
+        String recipeName = recipeNameEditText.getText().toString();
+        return recipeName.length() == 0;
     }
 
     private boolean areTagsSelected() {
@@ -423,10 +431,12 @@ public class UploadRecipe extends AppCompatActivity {
     }
 
     private boolean areIngredientsAdded() {
+        Log.d("UploadRecipe", "Number of ingredients is: " + ingredientsLayout.getChildCount());
         return ingredientsLayout.getChildCount() > 0;
     }
 
     private boolean areStepsAdded() {
+        Log.d("UploadRecipe", "Number of steps is: " + stepsLayout.getChildCount());
         return stepsLayout.getChildCount() > 0;
     }
 

@@ -184,7 +184,7 @@ public class UpdateRecipeActivity extends AppCompatActivity {
 
                     for (HashMap<String, Object> ingredientMap : ingredientsList) {
                         String name = (String) ingredientMap.get("name");
-                        int quantity = ((Long) ingredientMap.get("quantity")).intValue();
+                        String quantity = (String) ingredientMap.get("quantity").toString();
                         String unit = (String) ingredientMap.get("unit");
                         addIngredientField(name, String.valueOf(quantity), unit);
                     }

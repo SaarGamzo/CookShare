@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
@@ -381,24 +382,51 @@ public class RecipePageActivity extends AppCompatActivity {
         TableLayout stepsTableLayout = findViewById(R.id.stepsTableLayout);
         int id = 1;
         for (String step : steps) {
+            // Split the step into substrings of 30 characters each
+            List<String> subSteps = splitStep(step, 30);
 
-            TableRow row = new TableRow(this);
-            TextView idTextView = new TextView(this);
-            idTextView.setText(String.valueOf(id));
-            idTextView.setTextColor(Color.BLACK);
-            idTextView.setPadding(8, 0, 8, 0);
-            idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            row.addView(idTextView);
+            for (int i = 0; i < subSteps.size(); i++) {
+                TableRow row = new TableRow(this);
+                TextView idTextView = new TextView(this);
+                idTextView.setText(i == 0 ? String.valueOf(id) : ""); // Show ID only for the first line
+                idTextView.setTextColor(Color.BLACK);
+                idTextView.setPadding(8, 0, 8, 0);
+                idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                row.addView(idTextView);
 
-            TextView textView = new TextView(this);
-            textView.setText(step);
-            textView.setTextColor(Color.BLACK);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            row.addView(textView);
-            stepsTableLayout.addView(row);
+                TextView textView = new TextView(this);
+                textView.setText(subSteps.get(i)); // Set the substring
+                textView.setTextColor(Color.BLACK);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                row.addView(textView);
+                stepsTableLayout.addView(row);
+            }
+
             id++;
         }
     }
+
+    private List<String> splitStep(String step, int chunkSize) {
+        List<String> subSteps = new ArrayList<>();
+        if (step.length() <= chunkSize) {
+            subSteps.add(step);
+        } else {
+            int start = 0;
+            int end;
+            while (start < step.length()) {
+                end = Math.min(start + chunkSize, step.length());
+                String subStep = step.substring(start, end);
+                if(end < step.length())
+                    subSteps.add(subStep + "-");
+                else
+                    subSteps.add(subStep);
+                start += chunkSize;
+            }
+        }
+        return subSteps;
+    }
+
+
 
     // This function updates the ingrredients table with data
     private void updateIngredientsTable(List<String> ingredientsList) {
@@ -419,27 +447,21 @@ public class RecipePageActivity extends AppCompatActivity {
 
                     TableRow row = new TableRow(this);
 
-                    // ID column
-                    TextView idTextView = new TextView(this);
-                    idTextView.setText(String.valueOf(id));
-                    idTextView.setTextColor(Color.BLACK);
-                    idTextView.setPadding(8, 0, 8, 0);
-                    idTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    row.addView(idTextView);
-
                     // Name column
                     TextView nameTextView = new TextView(this);
                     nameTextView.setText(name);
                     nameTextView.setTextColor(Color.BLACK);
                     nameTextView.setPadding(8, 0, 8, 0);
                     nameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    nameTextView.setSingleLine(true); // Set single line
+                    nameTextView.setEllipsize(TextUtils.TruncateAt.END); // Set ellipsize
                     row.addView(nameTextView);
 
                     // Quantity column
                     TextView quantityTextView = new TextView(this);
                     quantityTextView.setText(quantity);
                     quantityTextView.setTextColor(Color.BLACK);
-                    quantityTextView.setPadding(8, 0, 8, 0);
+                    quantityTextView.setPadding(20, 0, 4, 0);
                     quantityTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     row.addView(quantityTextView);
 
@@ -447,7 +469,7 @@ public class RecipePageActivity extends AppCompatActivity {
                     TextView unitTextView = new TextView(this);
                     unitTextView.setText(unit);
                     unitTextView.setTextColor(Color.BLACK);
-                    unitTextView.setPadding(8, 0, 8, 0);
+                    unitTextView.setPadding(4, 0, 0, 0);
                     unitTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     row.addView(unitTextView);
                     ingredientsTableLayout.addView(row);
