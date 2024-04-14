@@ -43,7 +43,21 @@ CookShare is a recipe-sharing application designed to allow users to upload, sha
 
 11. **Alert dialogs**
     - There is a usage with alert dialogs to verify user logout and recipe removal by user.
-   
+
+## Usage videos:
+
+## Login & Register video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/b95a4ff0-0376-4a20-aa44-f521ce559452
+
+## App Navigation video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/233a3d02-b0d1-48db-889a-ca2fb88353fb
+
+## Upload a recipe video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/7ca65db5-9926-4222-b588-3c00b0aeebfc
+
+## Update an existing recipe video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/76b8935a-e22b-4973-bf88-2a2edfe2800f
+
 ## Screenshots
 
 ## Login screenshots:
