@@ -46,6 +46,12 @@ CookShare is a recipe-sharing application designed to allow users to upload, sha
 
 ## Screenshots
 
+## Login screenshots:
+
+| Login | Register |
+| --- | --- | --- | --- |
+| <img src="media/loginPage.jpeg" alt="Main Menu" width="200"/> | <img src="media/registerPage.jpeg" alt="Settings" width="200"/> |
+
 ### Login Screen
 <!-- ![Login Screen](screenshots/login_screen.png) -->
 
