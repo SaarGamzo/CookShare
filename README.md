@@ -44,42 +44,55 @@ CookShare is a recipe-sharing application designed to allow users to upload, sha
 11. **Alert dialogs**
     - There is a usage with alert dialogs to verify user logout and recipe removal by user.
 
+## Usage videos:
+
+## Login & Register video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/b95a4ff0-0376-4a20-aa44-f521ce559452
+
+## App Navigation video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/233a3d02-b0d1-48db-889a-ca2fb88353fb
+
+## Upload a recipe video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/7ca65db5-9926-4222-b588-3c00b0aeebfc
+
+## Update an existing recipe video:
+https://github.com/SaarGamzo/CookShare/assets/88244818/76b8935a-e22b-4973-bf88-2a2edfe2800f
+
 ## Screenshots
 
 ## Login screenshots:
 
-| Login | Register |
+| Login | Register | Menu |
+| --- | --- | --- |
+| <img src="media/loginPage.jpeg" alt="Main Menu" width="200"/> | <img src="media/registerPage.jpeg" alt="Settings" width="200"/> | <img src="media/MenuSelect.jpeg" alt="Settings" width="200"/> |
+
+## Main Feed screenshots:
+
+| Main feed | Liked recipes | My recipes | Tag filter |
 | --- | --- | --- | --- |
-| <img src="media/loginPage.jpeg" alt="Main Menu" width="200"/> | <img src="media/registerPage.jpeg" alt="Settings" width="200"/> |
+| <img src="media/MyRecipesSelect.jpeg" alt="Main Feed" width="200"/> | <img src="media/LikedRecipes.jpeg" alt="Liked Recipes" width="200"/> | <img src="media/MyRecipesSelect.jpeg" alt="My Recipes" width="200"/> | <img src="media/BurgerTagSelect.jpeg" alt="Tag Filter" width="200"/> |
 
-### Login Screen
-<!-- ![Login Screen](screenshots/login_screen.png) -->
+## Recipe view screenshots:
 
-### Register Screen
-<!-- ![Register Screen](screenshots/register_screen.png) -->
-
-### Main Feed
-<!-- ![Main Feed](screenshots/main_feed.png) -->
-
-### Main Feed Tag Filtered
-<!-- ![Main Feed Tag Filtered](screenshots/main_feed_tag_filtered.png) -->
-
-### Upload Recipe Screen
-<!-- ![Upload Recipe Screen](screenshots/upload_recipe_screen.png) -->
-
-### Recipe Details Screen
-<!-- ![Recipe Details Screen](screenshots/recipe_details_screen.png) -->
-
-### Update Recipe Screen
-<!-- ![Update Recipe Screen](screenshots/update_recipe_screen.png) -->
-
-### Personal Details Screen
-<!-- ![Personal Details Screen](screenshots/personal_details_screen.png) -->
-
-### Remove Recipe Dialog
-<!-- ![Remove Recipe Dialog](screenshots/remove_recipe_dialog.png) -->
-
-### Logout Dialog
-<!-- ![Logout Dialog](screenshots/logout_dialog.png) -->
+| Recipe view | Recipe view | Recipe view |
+| --- | --- | --- |
+| <img src="media/RecipeView1.jpeg" alt="Main Feed" width="200"/> | <img src="media/RecipeView2.jpeg" alt="Liked Recipes" width="200"/> | <img src="media/RecipeView3.jpeg" alt="My Recipes" width="200"/> |
 
 
+## Recipe upload:
+
+| Recipe upload | Recipe upload | Recipe upload |
+| --- | --- | --- |
+| <img src="media/UploadRecipe1.jpeg" alt="Main Feed" width="200"/> | <img src="media/UploadRecipe2.jpeg" alt="Liked Recipes" width="200"/> | <img src="media/UploadRecipe3.jpeg" alt="My Recipes" width="200"/> |
+
+## Update Recipe screenshots:
+
+| Update recipe | Update recipe | Update recipe | Update recipe | Update recipe |
+| --- | --- | --- | --- | --- |
+| <img src="media/UpdateRecipe1.jpeg" alt="Main Feed" width="200"/> | <img src="media/UpdateRecipe2.jpeg" alt="Liked Recipes" width="200"/> | <img src="media/UpdateRecipe3.jpeg" alt="My Recipes" width="200"/> | <img src="media/UpdateRecipe4.jpeg" alt="My Recipes" width="200"/> | <img src="media/UpdateRecipe5.jpeg" alt="My Recipes" width="200"/> |
+
+## More views:
+
+| Personal details | Recipe removal |
+| --- | --- |
+| <img src="media/PersonalDetails.jpeg" alt="Main Feed" width="200"/> | <img src="media/RemoveRecipe.jpeg" alt="Liked Recipes" width="200"/> |
