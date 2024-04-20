@@ -31,7 +31,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -343,26 +345,45 @@ public class RecipePageActivity extends AppCompatActivity {
     // This function delete a recipe from the database
     public void deleteRecipe(String recipeName){
         // Remove the recipe from the database
-        DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+        DatabaseReference recipeRef = DatabaseUtils.getInstance().getDatabaseReference().child("Recipes").child(recipeName);
+        recipeRef.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                // Recipe successfully deleted
+                // Recipe successfully deleted from database
                 Log.d("DatabaseUtils", "Recipe: " + recipeName +" deleted successfully!");
+
+                // Remove image from storage
+                StorageReference storageRef = DatabaseUtils.getInstance().getFirebaseStorage().getReference("images").child("recipe_" +recipeName + ".png");
+                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Image successfully deleted from storage
+                        Log.d("StorageUtils", "Image for recipe: " + recipeName + " deleted successfully!");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Failed to delete the image
+                        Log.e("StorageUtils", "Error deleting image for recipe: " + e.getMessage());
+                    }
+                });
+
                 myUtils.showToast("Recipe removed successfully!");
                 Intent uploadRecipeIntent = new Intent(RecipePageActivity.this, MainFeed.class);
                 uploadRecipeIntent.putExtra("textAcronyms", textAcronyms.getText());
+                uploadRecipeIntent.putExtra("email", userEmail);
                 startActivity(uploadRecipeIntent);
                 finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                // Failed to delete the recipe
+                // Failed to delete the recipe from database
                 Log.e("DatabaseUtils", "Error deleting recipe: " + e.getMessage());
             }
         });
-
     }
+
 
 
     // This function updates the text view of tags with data

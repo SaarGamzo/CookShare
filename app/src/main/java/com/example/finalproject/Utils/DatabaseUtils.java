@@ -44,6 +44,4 @@ public class DatabaseUtils {
         return databaseReference;
     }
 
-    // Add other database operations here
-    // Example: addRecipe, updateRecipe, fetchRecipes, etc.
 }
